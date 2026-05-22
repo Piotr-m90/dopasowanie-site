@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Co AI faktycznie zrobi dla Twojej firmy | Sprawdź w 3 minuty</title>
+<meta name="description" content="Darmowe narzędzie dla małych firm: zaznacz, gdzie tracisz czas, a my pokażemy ile godzin i złotych możesz odzyskać miesięcznie — i który pakiet albo automatyzacja jest dla Ciebie. Bez logowania.">
+<meta name="robots" content="index,follow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0B1B2B; --ink-soft:#16334d; --paper:#f6f8fb; --card:#fff;
+    --accent:#F5A623; --accent-2:#1f6feb; --line:#e3e9f0; --muted:#5b6b7c;
+    --red:#e0342c; --yellow:#c98a00; --green:#1f9d57; --green-bg:#e9f7ef;
+    --radius:16px; --maxw:980px;
+  }
+  body[data-brand="metropolix"]{ --ink:#0e2a28; --ink-soft:#103b38; --accent:#1ABC9C; --accent-2:#0e8c76; }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',system-ui,sans-serif;color:var(--ink);background:var(--paper);line-height:1.5;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+  .btn{display:inline-flex;align-items:center;gap:10px;border:none;cursor:pointer;font-weight:800;font-size:16px;
+    padding:15px 28px;border-radius:999px;transition:.18s;text-decoration:none;font-family:inherit}
+  .btn-primary{background:var(--accent);color:var(--ink)}
+  .btn-primary:hover{filter:brightness(.94);transform:translateY(-1px)}
+  body[data-brand="metropolix"] .btn-primary{color:#fff}
+  .btn-ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
+  .btn-ghost:hover{border-color:var(--accent)}
+  .btn[disabled]{opacity:.45;cursor:not-allowed;transform:none}
+
+  header.hero{background:linear-gradient(160deg,var(--ink) 0%,var(--ink-soft) 100%);color:#fff;padding:60px 0 68px}
+  .eyebrow{display:inline-block;font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--accent);background:rgba(255,255,255,.06);padding:7px 14px;border-radius:999px;margin-bottom:22px}
+  .hero h1{font-size:clamp(28px,5vw,52px);font-weight:900;line-height:1.08;letter-spacing:-.02em;max-width:780px;margin-bottom:18px}
+  .hero p.lead{font-size:clamp(16px,2.2vw,20px);color:#cdd8e4;max-width:660px;margin-bottom:30px}
+  .hero .cta-row{display:flex;flex-wrap:wrap;gap:12px}
+  .hero .meta{display:flex;flex-wrap:wrap;gap:18px;margin-top:26px;font-size:13px;color:#9fb1c4}
+  .hero .meta span{display:inline-flex;align-items:center;gap:7px}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);display:inline-block}
+
+  main{padding:34px 0 80px;position:relative}
+  .steps-nav{display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap}
+  .step-pill{flex:1;min-width:150px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;
+    font-size:13px;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:10px}
+  .step-pill .num{width:24px;height:24px;border-radius:50%;background:var(--line);color:var(--muted);display:grid;place-items:center;font-size:12px;font-weight:800;flex:none}
+  .step-pill.active{border-color:var(--accent);color:var(--ink);box-shadow:0 4px 18px rgba(11,27,43,.07)}
+  .step-pill.active .num{background:var(--accent);color:var(--ink)} body[data-brand="metropolix"] .step-pill.active .num{color:#fff}
+  .step-pill.done .num{background:var(--green);color:#fff}
+
+  /* live counter (floating) */
+  .live-counter{position:sticky;top:14px;float:right;margin:-6px 0 10px 18px;background:var(--ink);color:#fff;border-radius:14px;
+    padding:14px 18px;box-shadow:0 10px 30px rgba(11,27,43,.2);min-width:210px;z-index:20}
+  .live-counter .lc-lab{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:#9fb1c4;font-weight:800}
+  .live-counter .lc-big{font-size:34px;font-weight:900;color:var(--accent);line-height:1.1;margin:3px 0}
+  .live-counter .lc-sub{font-size:13px;color:#cdd8e4}
+  @media(max-width:680px){.live-counter{position:static;float:none;margin:0 0 18px;min-width:0}}
+
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:30px;box-shadow:0 6px 30px rgba(11,27,43,.05);display:none}
+  .panel.active{display:block;animation:fade .3s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .panel h2{font-size:24px;font-weight:900;letter-spacing:-.01em;margin-bottom:6px}
+  .panel .sub{color:var(--muted);font-size:15px;margin-bottom:24px;max-width:640px}
+
+  .arch-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:12px}
+  .arch-card{border:1.5px solid var(--line);border-radius:12px;padding:16px;cursor:pointer;background:#fff;transition:.15s;text-align:left;font-family:inherit}
+  .arch-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 24px rgba(11,27,43,.09)}
+  .arch-card .a-emoji{font-size:24px;line-height:1}
+  .arch-card .a-name{font-weight:800;font-size:15px;margin:8px 0 3px;color:var(--ink)}
+  .arch-card .a-tag{font-size:13px;color:var(--muted)}
+  .or-div{display:flex;align-items:center;gap:14px;color:var(--muted);font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.1em;margin:26px 0 20px}
+  .or-div::before,.or-div::after{content:"";flex:1;height:1px;background:var(--line)}
+
+  .field{margin-bottom:22px}
+  .field>label.q{display:block;font-weight:700;font-size:15px;margin-bottom:10px}
+  .field .hint{font-size:13px;color:var(--muted);font-weight:400;margin-bottom:10px}
+  .opts{display:flex;flex-wrap:wrap;gap:10px}
+  .opt{position:relative}
+  .opt input{position:absolute;opacity:0;inset:0;cursor:pointer}
+  .opt span{display:inline-block;border:1.5px solid var(--line);border-radius:10px;padding:11px 16px;font-size:14px;font-weight:600;color:var(--ink-soft);cursor:pointer;transition:.15s;background:#fff}
+  .opt input:checked + span{border-color:var(--accent);background:var(--accent);color:var(--ink)}
+  body[data-brand="metropolix"] .opt input:checked + span{color:#fff}
+  select{width:100%;max-width:380px;padding:12px 14px;border:1.5px solid var(--line);border-radius:10px;font-size:15px;font-family:inherit;color:var(--ink);background:#fff}
+
+  /* pains grid */
+  .pains{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:11px}
+  .pain{position:relative}
+  .pain input{position:absolute;opacity:0;inset:0;cursor:pointer}
+  .pain .pbox{border:1.5px solid var(--line);border-radius:12px;padding:15px 16px;cursor:pointer;transition:.15s;background:#fff;height:100%}
+  .pain input:checked + .pbox{border-color:var(--accent);background:#fffdf6}
+  body[data-brand="metropolix"] .pain input:checked + .pbox{background:#f0fbf8}
+  .pain .pt{font-weight:700;font-size:14px;display:flex;justify-content:space-between;gap:8px;align-items:center}
+  .pain .ph{font-size:12.5px;color:var(--muted);margin-top:4px}
+  .pain .pmin{font-size:11px;font-weight:800;color:var(--accent);white-space:nowrap}
+  body[data-brand="metropolix"] .pain .pmin{color:var(--accent-2)}
+
+  .nav-row{display:flex;justify-content:space-between;align-items:center;margin-top:28px;gap:14px;flex-wrap:wrap}
+
+  /* results */
+  .verdict{background:var(--ink);color:#fff;border-radius:var(--radius);padding:26px;margin-bottom:24px;text-align:center}
+  .verdict .vbig{font-size:46px;font-weight:900;color:var(--accent);line-height:1.05}
+  .verdict .vsub{font-size:16px;color:#cdd8e4;margin-top:6px}
+  .verdict .vrow{display:flex;justify-content:center;gap:34px;flex-wrap:wrap;margin-top:6px}
+  .verdict .vrow .vt{font-size:13px;color:#9fb1c4;text-transform:uppercase;letter-spacing:.08em;font-weight:800}
+
+  .sec{margin-bottom:28px}
+  .sec h3{font-size:18px;font-weight:900;margin-bottom:14px;display:flex;align-items:center;gap:10px}
+  .sec h3 .bar{width:4px;height:20px;background:var(--accent);border-radius:2px}
+
+  .pkg{border:1px solid var(--line);border-radius:14px;padding:24px;background:#fff;box-shadow:0 6px 24px rgba(11,27,43,.06)}
+  .pkg.primary{border:2px solid var(--accent)}
+  .pkg .ptag{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);background:#fffdf6;border:1px solid var(--accent);border-radius:999px;padding:4px 11px;margin-bottom:12px}
+  body[data-brand="metropolix"] .pkg .ptag{color:var(--accent-2);border-color:var(--accent-2);background:#f0fbf8}
+  .pkg .pname{font-size:22px;font-weight:900}
+  .pkg .pprice{font-size:16px;font-weight:800;color:var(--ink-soft);margin:2px 0 4px}
+  .pkg .pwhy{font-size:14px;color:var(--ink-soft);background:var(--paper);border-radius:10px;padding:12px 14px;margin:12px 0}
+  .pkg .pwhy b{color:var(--ink)}
+  .pkg ul{list-style:none;display:grid;gap:8px;margin:10px 0 0}
+  .pkg ul li{font-size:14px;padding-left:24px;position:relative;color:var(--ink-soft)}
+  .pkg ul li::before{content:"✓";position:absolute;left:0;color:var(--green);font-weight:900}
+  .pkg .pout{font-size:14px;font-weight:700;color:var(--green);margin-top:12px}
+  .proof{margin-top:14px;border-top:1px dashed var(--line);padding-top:14px}
+  .proof .pl{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:8px}
+  .proof ul li::before{content:"🛡";color:var(--accent-2)}
+  .pkg .pcta{margin-top:18px}
+
+  .alts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  @media(max-width:640px){.alts{grid-template-columns:1fr}}
+  .alt{border:1px solid var(--line);border-radius:12px;padding:16px;background:#fff}
+  .alt .an{font-weight:800;font-size:15px}
+  .alt .ap{font-size:13px;color:var(--muted);margin:2px 0 6px}
+  .alt .ad{font-size:13px;color:var(--ink-soft)}
+
+  ul.autos{list-style:none;display:grid;gap:10px}
+  ul.autos li{background:#fff;border:1px solid var(--line);border-radius:10px;padding:13px 16px;font-size:14px;display:flex;gap:11px;align-items:flex-start}
+  ul.autos li::before{content:"→";color:var(--accent);font-weight:900;flex:none}
+
+  .cost{background:#fdecec;border:1px solid #f6c9c6;border-radius:14px;padding:20px 22px;margin-bottom:28px}
+  .cost h3{color:var(--red);font-size:16px;font-weight:900;margin-bottom:6px}
+  .cost p{font-size:14px;color:#7a2420}
+  .cost b{font-size:18px}
+
+  .cta-final{background:linear-gradient(160deg,var(--ink),var(--ink-soft));color:#fff;border-radius:var(--radius);padding:34px 30px;text-align:center;margin-top:30px}
+  .cta-final h3{font-size:24px;font-weight:900;margin-bottom:10px}
+  .cta-final p{color:#cdd8e4;max-width:560px;margin:0 auto 22px;font-size:15px}
+  .disclaimer{font-size:12px;color:var(--muted);margin-top:24px;border-top:1px solid var(--line);padding-top:16px;line-height:1.6}
+  footer{background:var(--ink);color:#9fb1c4;padding:30px 0;font-size:13px;text-align:center}
+  footer a{color:#cdd8e4}
+  .demo-note{background:#fff7e6;border:1px solid #f3d99a;border-radius:12px;padding:12px 16px;font-size:13px;color:#7a5a12;margin-bottom:18px;display:none}
+  .demo-note.show{display:block}
+</style>
+</head>
+<body data-brand="mo">
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow" id="brandEyebrow">Dopasowanie AI · dla małych firm</span>
+    <h1>Co AI faktycznie zrobi dla Twojej firmy? Sprawdź w 3 minuty.</h1>
+    <p class="lead">Zaznacz, gdzie tracisz czas. Pokażemy ile godzin i złotych możesz odzyskać miesięcznie — i który pakiet albo automatyzacja jest dla Ciebie. Bez logowania, po ludzku, bez technicznego żargonu.</p>
+    <div class="cta-row">
+      <a href="#tool" class="btn btn-primary" id="ctaStart">Sprawdź swoją firmę →</a>
+      <button class="btn btn-ghost" id="ctaDemo">Zobacz przykład (30s)</button>
+    </div>
+    <div class="meta">
+      <span><i class="dot"></i> Bez logowania, za darmo</span>
+      <span><i class="dot"></i> Wyliczenia w Twojej przeglądarce</span>
+      <span><i class="dot"></i> Konkret, nie sprzedaż</span>
+    </div>
+  </div>
+</header>
+
+<main id="tool">
+  <div class="wrap">
+    <div class="steps-nav" id="stepsNav">
+      <div class="step-pill active" data-pill="1"><span class="num">1</span> Twoja firma</div>
+      <div class="step-pill" data-pill="2"><span class="num">2</span> Gdzie tracisz czas</div>
+      <div class="step-pill" data-pill="3"><span class="num">3</span> Co Ci się opłaca</div>
+    </div>
+
+    <div class="demo-note" id="demoNote"><strong>Przykład:</strong> oglądasz dopasowanie dla typowej firmy — agencji 5 osób. Aby sprawdzić swoją, kliknij „Zacznij od nowa" na dole.</div>
+
+    <!-- STEP 1 -->
+    <section class="panel active" data-panel="1">
+      <h2>Najpierw: czy któraś z tych firm to Wy?</h2>
+      <p class="sub">Wybierzcie najbliższą — od razu podstawimy typowe „gdzie ucieka czas". Potem dopasujecie do siebie. Albo wypełnijcie ręcznie niżej.</p>
+      <div class="arch-gallery" id="archGallery"></div>
+
+      <div class="or-div">albo wypełnij sam</div>
+
+      <div class="field">
+        <label class="q">Ile osób pracuje u Was?</label>
+        <div class="opts" data-name="size">
+          <label class="opt"><input type="radio" name="size" value="solo"><span>Tylko ja</span></label>
+          <label class="opt"><input type="radio" name="size" value="micro"><span>2–9 osób</span></label>
+          <label class="opt"><input type="radio" name="size" value="small"><span>10–49 osób</span></label>
+          <label class="opt"><input type="radio" name="size" value="mid"><span>50+ osób</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <label class="q" for="industry">Branża</label>
+        <select id="industry">
+          <option value="">— wybierz —</option>
+          <option value="uslugi">Usługi / agencja / freelancing</option>
+          <option value="handel">Handel / e-commerce</option>
+          <option value="gastro">Gastronomia / hotelarstwo</option>
+          <option value="zdrowie">Zdrowie / gabinet / uroda</option>
+          <option value="finanse">Finanse / księgowość / kancelaria</option>
+          <option value="produkcja">Produkcja / rzemiosło / budowlanka</option>
+          <option value="edukacja">Edukacja / szkolenia</option>
+          <option value="inne">Inne</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="q">Ile jest warta godzina Twojej pracy? (do wyceny oszczędności)</label>
+        <div class="hint">Orientacyjnie — żebyśmy mogli przeliczyć odzyskany czas na złotówki.</div>
+        <div class="opts" data-name="rate">
+          <label class="opt"><input type="radio" name="rate" value="60"><span>~60 zł</span></label>
+          <label class="opt"><input type="radio" name="rate" value="100" checked><span>~100 zł</span></label>
+          <label class="opt"><input type="radio" name="rate" value="150"><span>~150 zł</span></label>
+          <label class="opt"><input type="radio" name="rate" value="250"><span>250 zł+</span></label>
+        </div>
+      </div>
+      <div class="nav-row"><span></span><button class="btn btn-primary" id="to2">Dalej: gdzie tracisz czas →</button></div>
+    </section>
+
+    <!-- STEP 2 -->
+    <section class="panel" data-panel="2">
+      <h2>Gdzie ucieka Wam czas?</h2>
+      <p class="sub">Zaznaczcie wszystko, co robicie ręcznie i co się powtarza. Licznik po prawej od razu pokazuje, ile da się odzyskać miesięcznie.</p>
+      <div class="pains" id="painsGrid"></div>
+      <div class="nav-row">
+        <button class="btn btn-ghost" id="back1">← Wstecz</button>
+        <button class="btn btn-primary" id="to3" disabled>Pokaż, co mi się opłaca →</button>
+      </div>
+    </section>
+
+    <!-- STEP 3 -->
+    <section class="panel" data-panel="3"><div id="results"></div></section>
+  </div>
+</main>
+
+<footer><div class="wrap"><p id="footerText">Dopasowanie AI — narzędzie orientacyjne. Przygotowane przez <a href="https://muszynski.online" target="_blank" rel="noopener">Muszyński.online</a>. Pomagamy małym firmom odzyskać czas dzięki AI — bez kodu i bez konsultanta na pół roku.</p></div></footer>
+
+<script>
+/* =========================================================================
+   DOPASOWANIE AI — fit-finder pakietów/automatyzacji (silnik regułowy, bez API).
+   Mapuje "gdzie tracisz czas" (bóle) → odzyskane godziny/zł + dopasowany pakiet
+   z naszej drabinki. Wszystko liczone lokalnie w przeglądarce.
+   ========================================================================= */
+
+/* Bóle: szacowane godziny/mc do odzyskania + kategoria (ops=operacyjne, brand=widoczność, web=strona) */
+const PAINS=[
+  {id:'maile',   t:'Odpisywanie na te same maile/wiadomości', h:8, cat:'ops', desc:'Wciąż piszesz to samo do różnych osób.'},
+  {id:'oferty',  t:'Ręczne robienie ofert i wycen',           h:6, cat:'ops', desc:'Każda oferta od zera, kopiuj-wklej.'},
+  {id:'faktury', t:'Faktury, rozliczenia, przepisywanie',     h:5, cat:'ops', desc:'Dane przepisywane z miejsca w miejsce.'},
+  {id:'umawianie',t:'Umawianie spotkań i przypomnienia',      h:5, cat:'ops', desc:'Granie w „kiedy Pani pasuje?".'},
+  {id:'obsluga', t:'Odpowiadanie na te same pytania klientów',h:7, cat:'ops', desc:'Te same pytania w kółko (FAQ).'},
+  {id:'raporty', t:'Raporty i zestawienia w Excelu',          h:4, cat:'ops', desc:'Ręczne sklejanie liczb co tydzień.'},
+  {id:'szukanie',t:'Szukanie dokumentów i informacji',        h:3, cat:'ops', desc:'„Gdzie to było zapisane?".'},
+  {id:'social',  t:'Treści na social media / LinkedIn',       h:6, cat:'brand', desc:'Pisanie postów zżera wieczory.'},
+  {id:'widocznosc',t:'Brak widoczności — klienci Was nie znają',h:0,cat:'brand', desc:'Nikt nie wie, że istniejecie.'},
+  {id:'strona',  t:'Brak strony albo stara, słaba strona',    h:0, cat:'web', desc:'Strona nie przynosi klientów.'}
+];
+
+/* Pakiety — nasza realna drabinka. proof = dowód/gwarancja/certyfikaty (zaufanie). */
+const PKG={
+  rozmowa:{name:'15-minutowa konkretna rozmowa', price:'za darmo', tag:'Na start',
+    forWhom:'Nie wiesz jeszcze od czego zacząć.',
+    includes:['Krótka, konkretna rozmowa o Twojej firmie','Wskażemy 1–2 pierwsze kroki pod Ciebie','Zero zobowiązań i zero sprzedaży na siłę'],
+    out:'Wyjdziesz z jasnością, co zrobić najpierw.', time:'15 minut',
+    proof:['Zero ryzyka — nic nie kupujesz','Mówimy po ludzku, nie żargonem'],
+    cta:{label:'Umów 15 min za darmo', url:'https://tidycal.com/pmuszynski/15-konkretna-rozmowa'}},
+  konsultacja:{name:'Konsultacja 30 minut', price:'150 €', tag:'Konkretna porada',
+    forWhom:'Masz 1–2 konkretne rzeczy do rozwiązania.',
+    includes:['30 minut 1:1 pod Twój problem','Konkretne „co i w jakiej kolejności"','Notatka z ustaleniami po rozmowie'],
+    out:'Plan działania na Twój konkretny przypadek.', time:'30 minut',
+    proof:['Konkret zamiast ogólników','Kwota odliczana, jeśli przejdziesz do wdrożenia'],
+    cta:{label:'Umów konsultację', url:'https://konsultacja.muszynski.online'}},
+  audyt:{name:'Audyt + demo na Twoich danych', price:'470 €', tag:'Zobacz, zanim zdecydujesz',
+    forWhom:'Chcesz zobaczyć efekt, zanim zainwestujesz większe pieniądze.',
+    includes:['Przegląd, gdzie konkretnie tracicie czas','Działające demo automatyzacji na Twoim przykładzie','Raport: co zautomatyzować, w jakiej kolejności, ile to zaoszczędzi'],
+    out:'Konkretny plan + działające demo, które widzisz na żywo.', time:'~1 tydzień',
+    proof:['Raport dostajesz na własność','Kwota audytu odliczana od wdrożenia','Bez zobowiązania do dalszych kroków'],
+    cta:{label:'Zamów audyt', url:'https://konsultacja.muszynski.online'}},
+  aios:{name:'AI OS — automatyzacja Twojej firmy', price:'od 2 000 €', tag:'Najmocniejszy efekt',
+    forWhom:'Tracisz 10+ godzin miesięcznie na powtarzalnej robocie.',
+    includes:['Automatyzujemy maile, oferty, faktury, obsługę — pod Waszą firmę','Bez kodu i bez konsultanta na pół roku','Wdrożenie + przeszkolenie zespołu, zostaje Wasze'],
+    out:'Odzyskujecie nawet 10+ godzin tygodniowo.', time:'2–4 tygodnie',
+    proof:['Stawiamy na narzędziach z certyfikatami ISO 27001 / SOC 2 (Google Workspace, OpenAI Business) — Wasze dane bezpieczne','Rozwiązanie jest Waszą własnością — utrzymacie je sami','Bez kodu — nie uzależniacie się od programisty'],
+    cta:{label:'Porozmawiajmy o wdrożeniu', url:'https://konsultacja.muszynski.online'}},
+  banner:{name:'Banner + Pakiet LinkedIn', price:'89–290 €', tag:'Widoczność',
+    forWhom:'Chcecie, żeby klienci Was widzieli i pamiętali.',
+    includes:['Profesjonalny baner i spójny wizerunek na LinkedIn','Pakiet 10 grafik gotowych do publikacji','Pod Wasz przekaz i branżę'],
+    out:'Wyglądacie profesjonalnie tam, gdzie szukają Was klienci.', time:'kilka dni',
+    proof:['Gotowe pliki na własność','Stała cena — wiesz z góry, ile zapłacisz'],
+    cta:{label:'Zobacz pakiet bannerów', url:'https://muszynski.online'}},
+  build:{name:'Strona, która przynosi klientów', price:'od 2 500 €', tag:'Strona www',
+    forWhom:'Nie macie strony albo obecna nie sprzedaje.',
+    includes:['Nowoczesna strona pod Wasz cel (klienci, nie ozdoba)','Pod telefon, szybka, z formularzem kontaktu','Treści i wygląd pod Waszą branżę'],
+    out:'Strona, która zamienia odwiedzających w zapytania.', time:'2–4 tygodnie',
+    proof:['Strona jest Waszą własnością','Zgodna z wymogami (RODO, dla DACH też Impressum)'],
+    cta:{label:'Porozmawiajmy o stronie', url:'https://konsultacja.muszynski.online'}}
+};
+
+/* Archetypy — od razu podstawiają typowe bóle */
+const ARCHETYPES=[
+  {id:'agencja',emoji:'📣',name:'Agencja / marketing',tag:'klienci, oferty, social',profile:{size:'micro',industry:'uslugi'},pains:['maile','oferty','social','obsluga']},
+  {id:'gabinet',emoji:'💆',name:'Gabinet / uroda / zdrowie',tag:'rezerwacje, przypomnienia',profile:{size:'micro',industry:'zdrowie'},pains:['umawianie','obsluga','social','widocznosc']},
+  {id:'sklep',emoji:'🛒',name:'Sklep / e-commerce',tag:'zamówienia, pytania',profile:{size:'micro',industry:'handel'},pains:['obsluga','maile','raporty','social']},
+  {id:'ksiegowa',emoji:'📊',name:'Biuro rachunkowe / kancelaria',tag:'dokumenty, faktury',profile:{size:'solo',industry:'finanse'},pains:['faktury','szukanie','maile','raporty']},
+  {id:'gastro',emoji:'🍽️',name:'Gastronomia / lokal',tag:'rezerwacje, opinie',profile:{size:'micro',industry:'gastro'},pains:['umawianie','obsluga','social','widocznosc']},
+  {id:'rzemioslo',emoji:'🔧',name:'Rzemiosło / usługi lokalne',tag:'wyceny, umawianie',profile:{size:'solo',industry:'produkcja'},pains:['oferty','umawianie','maile','strona']}
+];
+
+const state={ profile:{rate:100}, pains:[] };
+
+/* ---- nav ---- */
+function goStep(n){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active', +p.dataset.panel===n));
+  document.querySelectorAll('.step-pill').forEach(p=>{const i=+p.dataset.pill;p.classList.toggle('active',i===n);p.classList.toggle('done',i<n);});
+  window.scrollTo({top:document.querySelector('main').offsetTop-10,behavior:'smooth'});
+}
+
+/* ---- archetypes ---- */
+function renderArch(){
+  document.getElementById('archGallery').innerHTML=ARCHETYPES.map(a=>`
+    <button type="button" class="arch-card" data-arch="${a.id}">
+      <div class="a-emoji">${a.emoji}</div><div class="a-name">${a.name}</div><div class="a-tag">${a.tag}</div>
+    </button>`).join('');
+  document.querySelectorAll('.arch-card').forEach(c=>c.onclick=()=>applyArchetype(c.dataset.arch));
+}
+function applyArchetype(id){
+  const a=ARCHETYPES.find(x=>x.id===id); if(!a) return;
+  const setR=(n,v)=>{const el=document.querySelector(`input[name="${n}"][value="${v}"]`); if(el) el.checked=true;};
+  setR('size',a.profile.size); document.getElementById('industry').value=a.profile.industry;
+  state.pains=[...a.pains];
+  renderPains();
+  goStep(2); updateCounter();
+}
+
+/* ---- pains ---- */
+function renderPains(){
+  document.getElementById('painsGrid').innerHTML=PAINS.map(p=>{
+    const on=state.pains.includes(p.id);
+    const min=p.h>0?`${p.h} h/mc`:'';
+    return `<label class="pain"><input type="checkbox" value="${p.id}" ${on?'checked':''}>
+      <div class="pbox"><div class="pt"><span>${p.t}</span><span class="pmin">${min}</span></div><div class="ph">${p.desc}</div></div></label>`;
+  }).join('');
+  document.querySelectorAll('.pain input').forEach(c=>c.onchange=e=>{
+    const id=e.target.value;
+    if(e.target.checked){ if(!state.pains.includes(id)) state.pains.push(id); }
+    else state.pains=state.pains.filter(x=>x!==id);
+    updateCounter();
+  });
+  updateCounter();
+}
+function totals(){
+  const rate=+state.profile.rate||100;
+  const h=state.pains.reduce((s,id)=>s+(PAINS.find(p=>p.id===id)?.h||0),0);
+  return {h, zl:h*rate, rate};
+}
+function ensureCounter(){
+  let el=document.getElementById('liveCounter');
+  if(!el){ el=document.createElement('div'); el.className='live-counter'; el.id='liveCounter';
+    document.querySelector('[data-panel="2"]').prepend(el); }
+  return el;
+}
+function updateCounter(){
+  const t=totals(); const el=ensureCounter();
+  el.innerHTML=`<div class="lc-lab">Możesz odzyskać</div><div class="lc-big">${t.h} h/mc</div>
+    <div class="lc-sub">≈ ${t.zl.toLocaleString('pl-PL')} zł / mc przy ${t.rate} zł/h</div>`;
+  document.getElementById('to3').disabled = state.pains.length===0;
+}
+
+/* ---- recommendation ---- */
+function readProfile(){
+  const g=n=>document.querySelector(`input[name="${n}"]:checked`)?.value||'';
+  state.profile.size=g('size'); state.profile.rate=g('rate')||100;
+  state.profile.industry=document.getElementById('industry').value;
+}
+function recommend(){
+  const sel=state.pains.map(id=>PAINS.find(p=>p.id===id));
+  const opsH=sel.filter(p=>p.cat==='ops').reduce((s,p)=>s+p.h,0);
+  const brand=sel.some(p=>p.cat==='brand');
+  const web=sel.some(p=>p.cat==='web');
+  const opsCount=sel.filter(p=>p.cat==='ops').length;
+
+  let primary, alts;
+  if(opsH>=12 || opsCount>=3){ primary='aios'; alts=['audyt','konsultacja']; }
+  else if(opsH>=5){ primary='audyt'; alts=['aios','konsultacja']; }
+  else if(web && !opsCount){ primary='build'; alts=['audyt','rozmowa']; }
+  else if(brand && opsCount<=1){ primary='audyt'; alts=['banner','konsultacja']; }
+  else { primary='konsultacja'; alts=['audyt','rozmowa']; }
+  // strona dorzucana jako alternatywa, jeśli zaznaczona a nie jest primary
+  if(web && primary!=='build' && !alts.includes('build')) alts=[...alts.slice(0,1),'build'];
+  return {primary, alts:alts.slice(0,2)};
+}
+
+/* ---- results ---- */
+function pkgCard(id, primary){
+  const p=PKG[id];
+  return `<div class="pkg ${primary?'primary':''}">
+    <span class="ptag">${primary?'Dla Was najlepiej: '+p.tag:p.tag}</span>
+    <div class="pname">${p.name}</div>
+    <div class="pprice">${p.price}${p.time?` · wdrożenie: ${p.time}`:''}</div>
+    <div class="pwhy"><b>Dlaczego to:</b> ${p.forWhom}</div>
+    <ul>${p.includes.map(i=>`<li>${i}</li>`).join('')}</ul>
+    <div class="pout">↗ ${p.out}</div>
+    <div class="proof"><div class="pl">Dowód i bezpieczeństwo</div><ul>${p.proof.map(i=>`<li>${i}</li>`).join('')}</ul></div>
+    ${primary?`<div class="pcta"><a class="btn btn-primary" href="${p.cta.url}" target="_blank" rel="noopener">${p.cta.label} →</a></div>`:''}
+  </div>`;
+}
+function renderResults(){
+  readProfile();
+  const t=totals(); const rec=recommend();
+  const sel=state.pains.map(id=>PAINS.find(p=>p.id===id));
+  // mapowanie ból → co zautomatyzujemy (nasze słowa)
+  const AUTO={
+    maile:'Auto-szkice odpowiedzi na powtarzalne maile — Ty tylko sprawdzasz i wysyłasz.',
+    oferty:'Oferty i wyceny składane w minuty z gotowych klocków, zamiast od zera.',
+    faktury:'Dane spinane między narzędziami — koniec z przepisywaniem ręcznie.',
+    umawianie:'Klient sam rezerwuje termin, system wysyła przypomnienia.',
+    obsluga:'Asystent odpowiada na najczęstsze pytania 24/7, trudne przekazuje Wam.',
+    raporty:'Raporty składają się same — gotowe na poniedziałek rano.',
+    szukanie:'Jedno miejsce, w którym pytasz i od razu masz dokument/odpowiedź.',
+    social:'Posty pisane pod Wasz głos — z pomysłu do gotowca w kilka minut.',
+    widocznosc:'Plan i treści, które sprawiają, że klienci zaczynają Was znać.',
+    strona:'Strona, która zamienia odwiedzających w zapytania.'
+  };
+  const autos=sel.filter(p=>AUTO[p.id]).map(p=>`<li>${AUTO[p.id]}</li>`).join('');
+  const yearH=t.h*12, yearZl=t.zl*12;
+
+  const brand=document.body.dataset.brand;
+  const head = t.h>0
+    ? `Na podstawie tego, co zaznaczyliście, możecie odzyskać <strong>~${t.h} godzin miesięcznie</strong>. To czas, który dziś znika na powtarzalnej robocie.`
+    : `Wskazaliście głównie widoczność/stronę — tu chodzi o klientów, nie o godziny. Poniżej, co da najwięcej.`;
+
+  document.getElementById('results').innerHTML=`
+    <h2>Co Wam się faktycznie opłaca</h2>
+    <p class="sub">Dopasowanie na podstawie ${state.pains.length} zaznaczonych obszarów. Wyliczenia orientacyjne — punkt wyjścia do rozmowy, nie wycena.</p>
+
+    <div class="verdict">
+      <div class="lc-lab" style="color:#9fb1c4;font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:800">Możecie odzyskać</div>
+      <div class="vbig">${t.h} h / mc</div>
+      <div class="vsub">≈ ${t.zl.toLocaleString('pl-PL')} zł miesięcznie · ~${yearZl.toLocaleString('pl-PL')} zł rocznie (przy ${t.rate} zł/h)</div>
+    </div>
+
+    <div class="sec"><p style="font-size:15px;color:var(--ink-soft);margin-bottom:18px">${head}</p>
+      ${pkgCard(rec.primary, true)}
+    </div>
+
+    ${autos?`<div class="sec"><h3><span class="bar"></span>Co konkretnie u Was zautomatyzujemy</h3><ul class="autos">${autos}</ul></div>`:''}
+
+    <div class="sec"><h3><span class="bar"></span>Inne opcje (gdybyście chcieli zacząć inaczej)</h3>
+      <div class="alts">${rec.alts.map(id=>{const p=PKG[id];return `<div class="alt"><div class="an">${p.name}</div><div class="ap">${p.price}</div><div class="ad">${p.forWhom}</div></div>`;}).join('')}</div>
+    </div>
+
+    ${t.h>0?`<div class="cost"><h3>Ile kosztuje zostawienie tego „na potem"</h3>
+      <p>Zostając jak jest, w rok tracicie około <b>${yearH} godzin</b> (~${yearZl.toLocaleString('pl-PL')} zł) na robocie, którą da się zdjąć z głowy. To nie jest kara — to po prostu czas, który Wam ucieka co miesiąc.</p></div>`:''}
+
+    <div class="cta-final">
+      <h3>Zobaczcie to na swoim przykładzie</h3>
+      <p>Najprościej zacząć od krótkiej rozmowy albo audytu — pokażemy konkret pod Waszą firmę, bez żargonu i bez zobowiązań.</p>
+      <a href="${PKG[rec.primary].cta.url}" class="btn btn-primary" target="_blank" rel="noopener">${PKG[rec.primary].cta.label} →</a>
+    </div>
+
+    <div class="nav-row"><button class="btn btn-ghost" id="back2">← Zmień odpowiedzi</button><button class="btn btn-ghost" id="restart">Zacznij od nowa</button></div>
+    <p class="disclaimer">Wyliczenia godzin i złotych są orientacyjne — opierają się na typowych wartościach dla małych firm i Twoich zaznaczeniach, nie na audycie. Realna oszczędność zależy od specyfiki firmy. Rekomendacja pakietu to sugestia punktu startu, nie wiążąca oferta. Twoje odpowiedzi nie są nigdzie wysyłane — liczone są w Twojej przeglądarce.</p>
+  `;
+  document.getElementById('back2').onclick=()=>goStep(2);
+  document.getElementById('restart').onclick=()=>location.reload();
+}
+
+/* ---- validation + wiring ---- */
+function step1ok(){ return !!document.querySelector('input[name="size"]:checked') && !!document.getElementById('industry').value; }
+document.getElementById('to2').onclick=()=>{ if(!step1ok()){alert('Zaznacz proszę wielkość firmy i branżę.');return;} readProfile(); renderPains(); goStep(2); };
+document.getElementById('back1').onclick=()=>goStep(1);
+document.getElementById('to3').onclick=()=>{ renderResults(); goStep(3); };
+document.querySelectorAll('input[name="rate"]').forEach(r=>r.onchange=()=>{state.profile.rate=r.value; updateCounter();});
+
+/* ---- demo (przykład bez inputu) ---- */
+document.getElementById('ctaDemo').onclick=()=>{
+  document.querySelector('input[name="size"][value="micro"]').checked=true;
+  document.getElementById('industry').value='uslugi';
+  state.pains=['maile','oferty','social','obsluga'];
+  document.getElementById('demoNote').classList.add('show');
+  readProfile(); renderPains(); renderResults(); goStep(3);
+};
+
+/* brand switch */
+(function(){const b=new URLSearchParams(location.search).get('brand');
+  if(b==='metropolix'){document.body.dataset.brand='metropolix';
+    document.getElementById('brandEyebrow').textContent='Dopasowanie AI · Metropolix';
+    document.getElementById('footerText').innerHTML='Dopasowanie AI — narzędzie orientacyjne. Przygotowane w ramach <a href="https://metropolix.com" target="_blank" rel="noopener">Metropolix</a>.';
+  }})();
+renderArch(); renderPains();
+</script>
+</body>
+</html>

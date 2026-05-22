@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://dopasowanie.muszynski.online/sitemap.xml
