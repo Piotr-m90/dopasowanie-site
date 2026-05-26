@@ -44,6 +44,7 @@
   .btn-ghost{background:transparent;color:var(--ink);border:2px solid var(--line)}
   .btn-ghost:hover{border-color:var(--accent)}
   .btn[disabled]{opacity:.45;cursor:not-allowed;transform:none}
+  .mcta{display:none}
 
   /* HERO */
   header.hero{background:linear-gradient(155deg,var(--ink) 0%,var(--ink-soft) 100%);color:#fff;padding:30px 0 64px}
@@ -240,9 +241,29 @@
     .pkg{padding:20px}
     .cta-final{padding:28px 20px}
     .cta-final .btn{width:100%;justify-content:center}
-    .live-counter{padding:14px 16px}
-    .live-counter .lc-big{font-size:30px}
     .who-box{padding:24px}
+
+    /* większe, wygodne pola na telefonie */
+    .opt span{padding:14px 18px;font-size:15px}
+    .pain .pbox{padding:18px 16px}
+    select{padding:15px 14px;font-size:16px}            /* 16px = brak auto-zoomu na iOS */
+    .arch-card{padding:18px}
+
+    /* licznik w panelu chowamy — wartość żyje w pasku na dole */
+    #liveCounter{display:none}
+    .panel .nav-row .btn-primary{display:none}          /* forward dubluje sticky pasek */
+
+    /* sticky pasek dolny: licznik + akcja kroku */
+    body{padding-bottom:80px}
+    .mcta{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:60;align-items:center;gap:12px;
+      padding:10px 14px;padding-bottom:calc(10px + env(safe-area-inset-bottom));
+      background:rgba(13,13,13,.97);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+      border-top:1px solid rgba(255,255,255,.1);box-shadow:0 -8px 24px rgba(0,0,0,.18)}
+    .mcta .m-info{flex:1;min-width:0;color:#fff;line-height:1.15}
+    .mcta .m-info .m-h{font-family:var(--mono);font-size:19px;font-weight:700;color:var(--accent);white-space:nowrap}
+    .mcta .m-info .m-s{font-size:11px;color:#cdc6ba;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .mcta .btn{flex:none;padding:15px 20px;font-size:15px}
+    .mcta.full .btn{flex:1;justify-content:center}
   }
 </style>
 </head>
@@ -402,6 +423,8 @@
   <p style="margin-top:14px;font-size:12px"><a href="/impressum.html">Impressum</a> · <a href="/datenschutz.html">Datenschutz / Prywatność</a> · <a href="mailto:kontakt@muszynski.online">kontakt@muszynski.online</a> · © 2026 Piotr Muszyński</p>
 </div></footer>
 
+<div class="mcta full" id="mcta" aria-hidden="false"></div>
+
 <script>
 /* =========================================================================
    DOPASOWANIE AI — fit-finder pakietów/automatyzacji (silnik regułowy, bez API).
@@ -494,6 +517,7 @@ function goStep(n){
   document.querySelectorAll('.panel').forEach(p=>p.classList.toggle('active', +p.dataset.panel===n));
   document.querySelectorAll('.step-pill').forEach(p=>{const i=+p.dataset.pill;p.classList.toggle('active',i===n);p.classList.toggle('done',i<n);});
   window.scrollTo({top:document.querySelector('main').offsetTop-10,behavior:'smooth'});
+  updateMcta();
 }
 
 /* ---- archetypes ---- */
@@ -547,6 +571,31 @@ function updateCounter(){
   el.innerHTML=`<div class="lc-lab">Możesz odzyskać</div><div class="lc-big">${t.h} h/mc</div>
     <div class="lc-sub">≈ ${t.zl.toLocaleString('pl-PL')} zł / mc przy ${t.rate} zł/h</div>`;
   document.getElementById('to3').disabled = state.pains.length===0;
+  updateMcta();
+}
+
+/* ---- sticky pasek dolny (tylko telefon) — licznik + akcja bieżącego kroku ---- */
+function curStep(){ return [...document.querySelectorAll('.panel')].findIndex(p=>p.classList.contains('active'))+1; }
+function updateMcta(){
+  const bar=document.getElementById('mcta'); if(!bar) return;
+  const step=curStep();
+  if(step===2){
+    const t=totals();
+    bar.className='mcta';
+    bar.innerHTML=`<div class="m-info"><div class="m-h">${t.h} h/mc</div><div class="m-s">≈ ${t.zl.toLocaleString('pl-PL')} zł / mc</div></div>
+      <button type="button" class="btn btn-primary" id="mctaBtn" ${state.pains.length===0?'disabled':''}>Pokaż wynik →</button>`;
+    document.getElementById('mctaBtn').onclick=()=>{ if(state.pains.length){ renderResults(); goStep(3); } };
+  } else if(step===3){
+    bar.className='mcta full';
+    bar.innerHTML=`<a class="btn btn-primary" href="${LEAD_FORM_URL}" target="_blank" rel="noopener">Poproś o rozbudowaną ofertę →</a>`;
+  } else {
+    bar.className='mcta full';
+    bar.innerHTML=`<button type="button" class="btn btn-primary" id="mctaBtn">Dalej →</button>`;
+    document.getElementById('mctaBtn').onclick=()=>{
+      if(!step1ok()){ document.querySelector('main').scrollIntoView({behavior:'smooth'}); alert('Wybierz firmę u góry albo zaznacz wielkość i branżę.'); return; }
+      readProfile(); renderPains(); goStep(2);
+    };
+  }
 }
 
 /* ---- recommendation ---- */
@@ -674,7 +723,7 @@ document.getElementById('ctaDemo').onclick=()=>{
     const hl=document.getElementById('heroLogo'); if(hl) hl.style.display='none';
     document.getElementById('footerText').innerHTML='Dopasowanie AI — narzędzie orientacyjne. Przygotowane w ramach <a href="https://metropolix.com" target="_blank" rel="noopener">Metropolix</a>.';
   }})();
-renderArch(); renderPains();
+renderArch(); renderPains(); updateMcta();
 </script>
 </body>
 </html>
