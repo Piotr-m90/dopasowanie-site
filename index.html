@@ -190,6 +190,23 @@
   .cta-2{color:#d6cfc2;font-size:14px;max-width:520px;margin:0 auto 14px;line-height:1.5}
   .disclaimer{font-size:12px;color:var(--muted);margin-top:24px;border-top:1px solid var(--line);padding-top:16px;line-height:1.6}
 
+  /* LEAD FORM (w cta-final, kontekst ciemny) */
+  .lead-form{display:grid;gap:10px;max-width:420px;margin:0 auto;text-align:left}
+  .lead-form input[type=text],.lead-form input[type=email],.lead-form input[type=tel]{
+    width:100%;padding:14px 16px;border-radius:12px;border:1.5px solid rgba(255,255,255,.18);
+    background:rgba(255,255,255,.06);color:#fff;font-family:inherit;font-size:16px}
+  .lead-form input::placeholder{color:#a89f90}
+  .lead-form input:focus{outline:none;border-color:var(--accent);background:rgba(255,255,255,.1)}
+  .lead-form .hp{position:absolute!important;left:-9999px;width:1px;height:1px;opacity:0}
+  .lead-form .consent{display:flex;gap:9px;align-items:flex-start;font-size:12.5px;color:#cdc6ba;line-height:1.45}
+  .lead-form .consent input{margin-top:2px;flex:none;width:17px;height:17px;accent-color:var(--accent);cursor:pointer}
+  .lead-form .btn-primary{margin-top:4px;justify-content:center}
+  .lead-msg{font-size:14px;line-height:1.5;margin-top:8px;min-height:1px}
+  .lead-msg.ok{color:#7BE0A6}
+  .lead-msg.err{color:#ffb4a2}
+  .lead-form.sent input,.lead-form.sent .consent,.lead-form.sent button{display:none}
+  .lead-form.sent .lead-msg{font-size:16px}
+
   /* KTO ZA TYM STOI */
   .who{padding:14px 0 54px}
   .who-box{background:linear-gradient(155deg,var(--ink),var(--ink-soft));color:#e9e3d8;border-radius:20px;padding:36px;display:flex;gap:24px;align-items:flex-start}
@@ -507,8 +524,10 @@ const ICONS={
   rzemioslo:`<svg ${IC}><path d="M15.5 4.6a4 4 0 0 0-4.9 5L4 16.2 7.8 20l6.6-6.6a4 4 0 0 0 5-4.9l-2.5 2.5-2.4-.6-.6-2.4 2.5-2.5z"/></svg>`
 };
 
-/* Autonomiczne łapanie leada — publiczny formularz Teable (ląduje w centralnej bazie Leady) */
-const LEAD_FORM_URL='https://app.teable.ai/share/shrXaL5HzKeF6CxYGGx/view';
+/* Autonomiczne łapanie leada — formularz on-page POST-uje do relay (Hostinger):
+   auto-mail do leada (Gmail SMTP) + powiadomienie Piotra + zapis do centralnej Teable Leady.
+   Relay niesie pełną diagnozę. Token/sekrety TYLKO na serwerze (.env), NIGDY tutaj. */
+const RELAY_URL='https://media.muszynski.online/dopasowanie/send.php';
 
 const state={ profile:{rate:100}, pains:[] };
 
@@ -587,7 +606,8 @@ function updateMcta(){
     document.getElementById('mctaBtn').onclick=()=>{ if(state.pains.length){ renderResults(); goStep(3); } };
   } else if(step===3){
     bar.className='mcta full';
-    bar.innerHTML=`<a class="btn btn-primary" href="${LEAD_FORM_URL}" target="_blank" rel="noopener">Poproś o rozbudowaną ofertę →</a>`;
+    bar.innerHTML=`<button type="button" class="btn btn-primary" id="mctaBtn">Poproś o rozbudowaną ofertę →</button>`;
+    document.getElementById('mctaBtn').onclick=()=>{ const f=document.getElementById('leadForm'); if(f){ f.scrollIntoView({behavior:'smooth',block:'center'}); const em=f.querySelector('[name=email]'); if(em) setTimeout(()=>{try{em.focus();}catch(_){}}, 380); } };
   } else {
     bar.className='mcta full';
     bar.innerHTML=`<button type="button" class="btn btn-primary" id="mctaBtn">Dalej →</button>`;
@@ -675,7 +695,7 @@ function renderResults(){
       ${pkgCard(rec.primary, true)}
     </div>
 
-    ${autos?`<div class="sec"><h3><span class="bar"></span>Co konkretnie u Was zautomatyzujemy</h3><ul class="autos">${autos}</ul></div>`:''}
+    ${autos?`<div class="sec"><h3><span class="bar"></span>Co konkretnie u Ciebie zautomatyzujemy</h3><ul class="autos">${autos}</ul></div>`:''}
 
     <div class="sec"><h3><span class="bar"></span>Inne opcje (jeśli chcesz zacząć inaczej)</h3>
       <div class="alts">${rec.alts.map(id=>{const p=PKG[id];return `<div class="alt"><div class="an">${p.name}</div><div class="ap">${p.price}</div><div class="ad">${p.forWhom}</div></div>`;}).join('')}</div>
@@ -686,8 +706,16 @@ function renderResults(){
 
     <div class="cta-final">
       <h3>Chcesz pełną ofertę pod swoją firmę?</h3>
-      <p>To, co widzisz wyżej, to mini-oferta z orientacyjnym kosztem. Zostaw kontakt, a w ciągu <strong>48 godzin</strong> wyślemy Ci <strong>rozbudowaną ofertę</strong>: jak AI może działać w Twojej firmie krok po kroku, z konkretnym kosztem i pierwszymi krokami. W mailu znajdziesz zaproszenie na rozmowę — bez dzwonienia bez zapowiedzi. Pracujemy online, hybrydowo lub indywidualnie.</p>
-      <a href="${LEAD_FORM_URL}" class="btn btn-primary" target="_blank" rel="noopener">Poproś o rozbudowaną ofertę →</a>
+      <p>To, co widzisz wyżej, to mini-oferta z orientacyjnym kosztem. Zostaw kontakt, a w ciągu <strong>48 godzin</strong> wyślę Ci <strong>rozbudowaną ofertę</strong>: jak AI może działać w Twojej firmie krok po kroku, z konkretnym kosztem i pierwszymi krokami. Od razu dostaniesz maila z potwierdzeniem i zaproszeniem na rozmowę — bez dzwonienia bez zapowiedzi.</p>
+      <form id="leadForm" class="lead-form" novalidate>
+        <input type="text" name="name" placeholder="Imię" autocomplete="name">
+        <input type="email" name="email" placeholder="Twój e-mail" required autocomplete="email" inputmode="email">
+        <input type="tel" name="phone" placeholder="Telefon (opcjonalnie)" autocomplete="tel" inputmode="tel">
+        <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <label class="consent"><input type="checkbox" name="consent" required> Zgadzam się na kontakt w sprawie oferty. Dane wykorzystamy tylko w tym celu (RODO).</label>
+        <button type="submit" class="btn btn-primary" id="leadSubmit">Poproś o rozbudowaną ofertę →</button>
+        <div class="lead-msg" id="leadMsg" role="status" aria-live="polite"></div>
+      </form>
       <div class="cta-or">albo</div>
       <p class="cta-2">Wolisz od razu porozmawiać? Umów 15 minut — bez zobowiązań.</p>
       <a href="https://tidycal.com/pmuszynski/15-konkretna-rozmowa" class="btn btn-ghost" target="_blank" rel="noopener">Umów 15 minut →</a>
@@ -698,6 +726,39 @@ function renderResults(){
   `;
   document.getElementById('back2').onclick=()=>goStep(2);
   document.getElementById('restart').onclick=()=>location.reload();
+
+  /* ---- lead form → relay (niesie diagnozę) ---- */
+  const pkgName = PKG[rec.primary].name;
+  const painNames = sel.map(p=>p.t).join(', ') || '—';
+  const diagMsg =
+    `Diagnoza ze strony dopasowanie:\n` +
+    `Profil: ${state.profile.size||'—'} / ${state.profile.industry||'—'}\n` +
+    `Bóle: ${painNames}\n` +
+    `Odzysk: ~${t.h} h/mc (~${t.zl.toLocaleString('pl-PL')} zł/mc, ~${yearZl.toLocaleString('pl-PL')} zł/rok przy ${t.rate} zł/h)\n` +
+    `Rekomendacja: ${pkgName}`;
+  const lead = { pkg:pkgName, hours:String(t.h), zl:t.zl.toLocaleString('pl-PL'), year_zl:yearZl.toLocaleString('pl-PL'), message:diagMsg };
+
+  const form=document.getElementById('leadForm');
+  if(form) form.addEventListener('submit', e=>{
+    e.preventDefault();
+    const msg=document.getElementById('leadMsg');
+    const btn=document.getElementById('leadSubmit');
+    const email=(form.email.value||'').trim();
+    if(!email || !/.+@.+\..+/.test(email)){ msg.className='lead-msg err'; msg.textContent='Podaj proszę poprawny e-mail.'; form.email.focus(); return; }
+    if(!form.consent.checked){ msg.className='lead-msg err'; msg.textContent='Zaznacz proszę zgodę na kontakt.'; return; }
+    btn.disabled=true; btn.textContent='Wysyłam…'; msg.className='lead-msg'; msg.textContent='';
+    const d=new URLSearchParams();
+    d.set('name',(form.name.value||'').trim()); d.set('email',email); d.set('phone',(form.phone.value||'').trim());
+    d.set('website',form.website.value||''); d.set('consent', form.consent.checked?'1':'');
+    d.set('message',lead.message); d.set('pkg',lead.pkg); d.set('hours',lead.hours); d.set('zl',lead.zl); d.set('year_zl',lead.year_zl);
+    fetch(RELAY_URL,{method:'POST',body:d})
+      .then(r=>r.json().catch(()=>({ok:false})))
+      .then(j=>{
+        if(j && j.ok){ form.classList.add('sent'); msg.className='lead-msg ok'; msg.textContent='✓ '+(j.msg||'Gotowe — sprawdź skrzynkę.'); }
+        else { btn.disabled=false; btn.textContent='Poproś o rozbudowaną ofertę →'; msg.className='lead-msg err'; msg.textContent=(j&&j.msg)||'Coś poszło nie tak. Spróbuj ponownie.'; }
+      })
+      .catch(()=>{ btn.disabled=false; btn.textContent='Poproś o rozbudowaną ofertę →'; msg.className='lead-msg err'; msg.textContent='Brak połączenia. Spróbuj ponownie lub napisz: kontakt@muszynski.online'; });
+  });
 }
 
 /* ---- validation + wiring ---- */
