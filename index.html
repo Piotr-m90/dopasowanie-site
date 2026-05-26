@@ -193,6 +193,23 @@
   .who-cta{margin-top:18px;color:#fff;border-color:rgba(255,255,255,.4)}
   .who-cta:hover{border-color:var(--accent);color:var(--accent)}
 
+  /* ARCHITEKTURA SUKCESU (drabinka produktów) */
+  .ladder{padding:30px 0 8px}
+  .ladder-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  @media(max-width:820px){.ladder-grid{grid-template-columns:1fr 1fr}}
+  @media(max-width:520px){.ladder-grid{grid-template-columns:1fr}}
+  .rung{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px;position:relative}
+  .rung.is-primary{border:2px solid var(--accent);background:#FEFAF0}
+  .rg-n{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--accent-2)}
+  .rg-stage{font-family:var(--mono);font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);margin:3px 0 9px;font-weight:700}
+  .rung h3{font-size:16px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px}
+  .rung p{font-size:13.5px;color:var(--ink-soft);line-height:1.5;margin-bottom:11px}
+  .rg-price{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--ink)}
+  .rg-flag{position:absolute;top:-9px;right:14px;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;background:var(--accent);color:#0D0D0D;padding:3px 9px;border-radius:999px}
+  body[data-brand="metropolix"] .rg-flag{color:#fff}
+  .formats{margin-top:20px;background:linear-gradient(155deg,var(--ink),var(--ink-soft));color:#d6cfc2;border-radius:14px;padding:18px 22px;font-size:14px;line-height:1.55}
+  .formats strong{color:#fff} .formats a{color:var(--accent);font-weight:700;text-decoration:none} .formats a:hover{text-decoration:underline}
+  .pdeliv{font-size:12.5px;color:var(--muted);margin:3px 0 2px}
   footer{background:var(--ink);color:#9b9384;padding:34px 0;font-size:13px;text-align:center}
   footer a{color:#cdc6ba}
   .footer-logo{height:34px;width:auto;margin:0 auto 16px;display:block;opacity:.9}
@@ -319,6 +336,18 @@
     <section class="panel" data-panel="3"><div id="results"></div></section>
   </div>
 </main>
+
+<section class="ladder"><div class="wrap">
+  <h2 class="how-h">Architektura sukcesu</h2>
+  <p class="how-sub">Nie musisz robić wszystkiego naraz. To ścieżka — wchodzisz na swoim etapie i idziesz dalej, kiedy jesteś gotów.</p>
+  <div class="ladder-grid">
+    <div class="rung"><div class="rg-n">01</div><div class="rg-stage">Zrozum</div><h3>15 minut za darmo</h3><p>Krótka rozmowa — wychodzisz wiedząc, od czego zacząć.</p><div class="rg-price">0 €</div></div>
+    <div class="rung"><div class="rg-n">02</div><div class="rg-stage">Zobacz</div><h3>Konsultacja / Audyt + demo</h3><p>Konkretny plan i działające demo na Waszym przykładzie.</p><div class="rg-price">150–470 €</div></div>
+    <div class="rung is-primary"><div class="rg-flag">Serce oferty</div><div class="rg-n">03</div><div class="rg-stage">Wdróż</div><h3>AI OS — automatyzacja</h3><p>Odzyskujecie 10+ godzin tygodniowo. Bez kodu, zostaje Wasze.</p><div class="rg-price">od 2 000 €</div></div>
+    <div class="rung"><div class="rg-n">04</div><div class="rg-stage">Pokaż się i skaluj</div><h3>Widoczność i strona</h3><p>Banner/LinkedIn oraz strona, która przynosi klientów.</p><div class="rg-price">89–2 500 €+</div></div>
+  </div>
+  <div class="formats"><strong>Jak pracujemy:</strong> każdy etap prowadzimy <strong>online</strong>, <strong>hybrydowo</strong> lub <strong>indywidualnie</strong>. Wariant indywidualny (pod Waszą firmę, na miejscu lub w dłuższym wsparciu) ustalamy w osobnej, krótkiej rozmowie — <a href="https://tidycal.com/pmuszynski/15-konkretna-rozmowa" target="_blank" rel="noopener">umów 15 minut →</a></div>
+</div></section>
 
 <section class="who"><div class="wrap"><div class="who-box">
   <img class="who-mark" src="https://res.cloudinary.com/dyw1pi3nt/image/upload/q_auto/f_auto/v1776859674/sygnet_e5yq6n.svg" alt="Muszyński.online" width="56" height="56" loading="lazy">
@@ -516,6 +545,7 @@ function pkgCard(id, primary){
     <span class="ptag">${primary?'Dla Was najlepiej: '+p.tag:p.tag}</span>
     <div class="pname">${p.name}</div>
     <div class="pprice">${p.price}${p.time?` · wdrożenie: ${p.time}`:''}</div>
+    <div class="pdeliv">Online · hybrydowo · indywidualnie (po kontakcie)</div>
     <div class="pwhy"><b>Dlaczego to:</b> ${p.forWhom}</div>
     <ul>${p.includes.map(i=>`<li>${i}</li>`).join('')}</ul>
     <div class="pout">↗ ${p.out}</div>
