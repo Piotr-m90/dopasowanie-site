@@ -164,6 +164,8 @@
   .proof .pl{font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:8px}
   .proof ul li::before{content:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="%23D4890A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4-3 7-7 9-4-2-7-5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg>');top:1px}
   .pkg .pcta{margin-top:20px}
+  .pkg .pcta .btn-primary{width:100%;justify-content:center;font-size:16px;padding:16px 22px}
+  .pkg .pcta-note{font-size:12.5px;color:var(--muted);margin-top:9px;line-height:1.45}
 
   .alts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
   @media(max-width:640px){.alts{grid-template-columns:1fr}}
@@ -656,6 +658,7 @@ function pkgCard(id, primary){
     <ul>${p.includes.map(i=>`<li>${i}</li>`).join('')}</ul>
     <div class="pout">↗ ${p.out}</div>
     <div class="proof"><div class="pl">Dowód i bezpieczeństwo</div><ul>${p.proof.map(i=>`<li>${i}</li>`).join('')}</ul></div>
+    ${primary?`<div class="pcta"><button type="button" class="btn btn-primary" id="cardOfferCta">Chcę pełną ofertę dopasowaną do mojej firmy →</button><div class="pcta-note">Cena i zakres dopasujemy do Twojej firmy — to powyżej to punkt wyjścia, nie finalna wycena.</div></div>`:''}
   </div>`;
 }
 function renderResults(){
@@ -707,9 +710,9 @@ function renderResults(){
       <p>Zostając jak jest, w rok tracisz około <b>${yearH} godzin</b> (~${yearZl.toLocaleString('pl-PL')} zł) na robocie, którą da się zdjąć z głowy. To nie jest kara — to po prostu czas, który Ci ucieka co miesiąc.</p></div>`:''}
 
     <div class="cta-final">
-      <h3>Chcesz pełną ofertę pod swoją firmę?</h3>
-      <p>To, co widzisz wyżej, to mini-oferta z orientacyjnym kosztem. Zostaw kontakt, a w ciągu <strong>48 godzin</strong> wyślę Ci <strong>rozbudowaną ofertę</strong>: jak AI może działać w Twojej firmie krok po kroku, z konkretnym kosztem i pierwszymi krokami. Od razu dostaniesz maila z potwierdzeniem i zaproszeniem na rozmowę — bez dzwonienia bez zapowiedzi.</p>
-      <button type="button" class="btn btn-primary" id="leadReveal">Poproś o rozbudowaną ofertę →</button>
+      <h3>Chcesz pełną ofertę dopasowaną do Twojej firmy?</h3>
+      <p>To, co widzisz wyżej, to mini-oferta z orientacyjną ceną. Zostaw kontakt, a w ciągu <strong>48 godzin</strong> wyślę Ci <strong>rozbudowaną ofertę pod Twoją firmę</strong> — z ceną i zakresem dopasowanym do Ciebie, krok po kroku jak AI u Ciebie działa. Od razu dostaniesz maila z potwierdzeniem i zaproszeniem na rozmowę — bez dzwonienia bez zapowiedzi.</p>
+      <button type="button" class="btn btn-primary" id="leadReveal">Chcę pełną ofertę dopasowaną do mojej firmy →</button>
       <form id="leadForm" class="lead-form" hidden novalidate>
         <p class="lead-intro">Zostaw kontakt — wyślę Ci rozbudowaną ofertę na maila (w ciągu 48h).</p>
         <input type="text" name="name" placeholder="Imię" autocomplete="name">
@@ -744,12 +747,15 @@ function renderResults(){
   const lead = { pkg:pkgName, hours:String(t.h), zl:t.zl.toLocaleString('pl-PL'), year_zl:yearZl.toLocaleString('pl-PL'), message:diagMsg };
 
   const form=document.getElementById('leadForm');
-  const reveal=document.getElementById('leadReveal');
-  if(reveal && form) reveal.onclick=()=>{
-    form.hidden=false; reveal.style.display='none';
+  function showLeadForm(){
+    if(!form) return;
+    form.hidden=false;
+    const rb=document.getElementById('leadReveal'); if(rb) rb.style.display='none';
     form.scrollIntoView({behavior:'smooth',block:'center'});
-    const em=form.querySelector('[name=email]'); if(em) setTimeout(()=>{try{em.focus();}catch(_){}}, 350);
-  };
+    const em=form.querySelector('[name=email]'); if(em) setTimeout(()=>{try{em.focus();}catch(_){}}, 360);
+  }
+  const reveal=document.getElementById('leadReveal'); if(reveal) reveal.onclick=showLeadForm;
+  const cardCta=document.getElementById('cardOfferCta'); if(cardCta) cardCta.onclick=showLeadForm;
   if(form) form.addEventListener('submit', e=>{
     e.preventDefault();
     const msg=document.getElementById('leadMsg');
