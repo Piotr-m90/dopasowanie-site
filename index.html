@@ -104,6 +104,9 @@
   .arch-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:12px}
   .arch-card{border:1.5px solid var(--line);border-radius:12px;padding:16px;cursor:pointer;background:#fff;transition:.15s;text-align:left;font-family:inherit}
   .arch-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 22px rgba(13,13,13,.07)}
+  .arch-card.selected{border-color:var(--accent);background:#FEFAF0;box-shadow:0 8px 22px rgba(240,160,32,.16)}
+  .arch-card.selected .a-name::after{content:" ✓";color:var(--accent-2);font-weight:700}
+  body[data-brand="metropolix"] .arch-card.selected{background:#f0fbf8}
   .arch-card .a-icon{color:var(--accent-2);height:28px}
   .arch-card .a-icon svg{width:28px;height:28px;display:block}
   .arch-card .a-name{font-weight:700;font-size:15px;margin:8px 0 3px;color:var(--ink);letter-spacing:-.01em}
@@ -219,6 +222,28 @@
   .footer-logo{height:34px;width:auto;margin:0 auto 16px;display:block;opacity:.9}
   .demo-note{background:#FEFAF0;border:1px solid #EAD3A1;border-radius:12px;padding:12px 16px;font-size:13px;color:#7a5a12;margin-bottom:18px;display:none}
   .demo-note.show{display:block}
+
+  /* MOBILE-FIRST polish — większość ruchu z telefonu */
+  @media(max-width:560px){
+    .wrap{padding:0 16px}
+    .hero{padding:24px 0 46px}
+    .hero .cta-row{flex-direction:column}
+    .hero .cta-row .btn{width:100%;justify-content:center}
+    .how{padding:40px 0 8px}
+    .panel{padding:20px}
+    .panel h2{font-size:21px}
+    .step-pill{min-width:0;flex:1;padding:9px 7px;font-size:11.5px;gap:6px}
+    .step-pill .num{width:20px;height:20px;font-size:11px}
+    .nav-row{flex-direction:column-reverse;align-items:stretch;gap:10px}
+    .nav-row .btn{width:100%;justify-content:center}
+    .verdict{padding:26px 18px}
+    .pkg{padding:20px}
+    .cta-final{padding:28px 20px}
+    .cta-final .btn{width:100%;justify-content:center}
+    .live-counter{padding:14px 16px}
+    .live-counter .lc-big{font-size:30px}
+    .who-box{padding:24px}
+  }
 </style>
 </head>
 <body data-brand="mo">
@@ -283,14 +308,14 @@
 
     <!-- STEP 1 -->
     <section class="panel active" data-panel="1">
-      <h2>Najpierw: czy któraś z tych firm to Wy?</h2>
-      <p class="sub">Wybierzcie najbliższą — od razu podstawimy typowe „gdzie ucieka czas". Potem dopasujecie do siebie. Albo wypełnijcie ręcznie niżej.</p>
+      <h2>Najpierw: która z tych firm przypomina Twoją?</h2>
+      <p class="sub">Wybierz najbliższą — od razu podstawimy typowe „gdzie ucieka czas". Potem dopasujesz do siebie. Albo wypełnij ręcznie niżej.</p>
       <div class="arch-gallery" id="archGallery"></div>
 
       <div class="or-div">albo wypełnij sam</div>
 
       <div class="field">
-        <label class="q">Ile osób pracuje u Was?</label>
+        <label class="q">Ile osób pracuje u Ciebie?</label>
         <div class="opts" data-name="size">
           <label class="opt"><input type="radio" name="size" value="solo"><span>Tylko ja</span></label>
           <label class="opt"><input type="radio" name="size" value="micro"><span>2–9 osób</span></label>
@@ -327,8 +352,8 @@
 
     <!-- STEP 2 -->
     <section class="panel" data-panel="2">
-      <h2>Gdzie ucieka Wam czas?</h2>
-      <p class="sub">Zaznaczcie wszystko, co robicie ręcznie i co się powtarza. Licznik po prawej od razu pokazuje, ile da się odzyskać miesięcznie.</p>
+      <h2>Gdzie ucieka Twój czas?</h2>
+      <p class="sub">Zaznacz wszystko, co robisz ręcznie i co się powtarza. Licznik od razu pokazuje, ile da się odzyskać miesięcznie.</p>
       <div class="pains" id="painsGrid"></div>
       <div class="nav-row">
         <button class="btn btn-ghost" id="back1">← Wstecz</button>
@@ -346,12 +371,12 @@
   <p class="how-sub">Nie musisz robić wszystkiego naraz. To ścieżka — wchodzisz na swoim etapie i idziesz dalej, kiedy jesteś gotów.</p>
   <div class="ladder-grid">
     <div class="rung"><div class="rg-n">01</div><div class="rg-stage">Zrozum</div><h3>Krótka rozmowa (15 min)</h3><p>Wychodzisz wiedząc, od czego zacząć.</p><div class="rg-price">Za darmo</div></div>
-    <div class="rung"><div class="rg-n">02</div><div class="rg-stage">Zobacz</div><h3>Konsultacja / Audyt + demo</h3><p>Konkretny plan i działające demo na Waszym przykładzie.</p><div class="rg-price">Cena w wyniku</div></div>
-    <div class="rung is-primary"><div class="rg-flag">Serce oferty</div><div class="rg-n">03</div><div class="rg-stage">Wdróż</div><h3>AI OS — automatyzacja</h3><p>Odzyskujecie 10+ godzin tygodniowo. Bez kodu, zostaje Wasze.</p><div class="rg-price">Cena w wyniku</div></div>
+    <div class="rung"><div class="rg-n">02</div><div class="rg-stage">Zobacz</div><h3>Konsultacja / Audyt + demo</h3><p>Konkretny plan i działające demo na Twoim przykładzie.</p><div class="rg-price">Cena w wyniku</div></div>
+    <div class="rung is-primary"><div class="rg-flag">Serce oferty</div><div class="rg-n">03</div><div class="rg-stage">Wdróż</div><h3>AI OS — automatyzacja</h3><p>Odzyskujesz 10+ godzin tygodniowo. Bez kodu, zostaje Twoje.</p><div class="rg-price">Cena w wyniku</div></div>
     <div class="rung"><div class="rg-n">04</div><div class="rg-stage">Pokaż się i skaluj</div><h3>Widoczność i strona</h3><p>Banner/LinkedIn oraz strona, która przynosi klientów.</p><div class="rg-price">Cena w wyniku</div></div>
   </div>
   <p class="how-sub" style="margin:18px auto 4px">Konkretną cenę — dopasowaną do Twojej firmy — zobaczysz w swoim wyniku, po krótkiej diagnozie.</p>
-  <div class="formats"><strong>Jak pracujemy:</strong> każdy etap prowadzimy <strong>online</strong>, <strong>hybrydowo</strong> lub <strong>indywidualnie</strong>. Wariant indywidualny (pod Waszą firmę, na miejscu lub w dłuższym wsparciu) ustalamy w osobnej, krótkiej rozmowie — <a href="https://tidycal.com/pmuszynski/15-konkretna-rozmowa" target="_blank" rel="noopener">umów 15 minut →</a></div>
+  <div class="formats"><strong>Jak pracujemy:</strong> każdy etap prowadzimy <strong>online</strong>, <strong>hybrydowo</strong> lub <strong>indywidualnie</strong>. Wariant indywidualny (pod Twoją firmę, na miejscu lub w dłuższym wsparciu) ustalamy w osobnej, krótkiej rozmowie — <a href="https://tidycal.com/pmuszynski/15-konkretna-rozmowa" target="_blank" rel="noopener">umów 15 minut →</a></div>
 </div></section>
 
 <section class="who"><div class="wrap"><div class="who-box">
@@ -394,7 +419,7 @@ const PAINS=[
   {id:'raporty', t:'Raporty i zestawienia w Excelu',          h:4, cat:'ops', desc:'Ręczne sklejanie liczb co tydzień.'},
   {id:'szukanie',t:'Szukanie dokumentów i informacji',        h:3, cat:'ops', desc:'„Gdzie to było zapisane?".'},
   {id:'social',  t:'Treści na social media / LinkedIn',       h:6, cat:'brand', desc:'Pisanie postów zżera wieczory.'},
-  {id:'widocznosc',t:'Brak widoczności — klienci Was nie znają',h:0,cat:'brand', desc:'Nikt nie wie, że istniejecie.'},
+  {id:'widocznosc',t:'Brak widoczności — klienci Cię nie znają',h:0,cat:'brand', desc:'Nikt nie wie, że istniejesz.'},
   {id:'strona',  t:'Brak strony albo stara, słaba strona',    h:0, cat:'web', desc:'Strona nie przynosi klientów.'}
 ];
 
@@ -414,27 +439,27 @@ const PKG={
     cta:{label:'Umów konsultację', url:'https://konsultacja.muszynski.online'}},
   audyt:{name:'Audyt + demo na Twoich danych', price:'470 €', tag:'Zobacz, zanim zdecydujesz',
     forWhom:'Chcesz zobaczyć efekt, zanim zainwestujesz większe pieniądze.',
-    includes:['Przegląd, gdzie konkretnie tracicie czas','Działające demo automatyzacji na Twoim przykładzie','Raport: co zautomatyzować, w jakiej kolejności, ile to zaoszczędzi'],
+    includes:['Przegląd, gdzie konkretnie tracisz czas','Działające demo automatyzacji na Twoim przykładzie','Raport: co zautomatyzować, w jakiej kolejności, ile to zaoszczędzi'],
     out:'Konkretny plan + działające demo, które widzisz na żywo.', time:'~1 tydzień',
     proof:['Raport dostajesz na własność','Kwota audytu odliczana od wdrożenia','Bez zobowiązania do dalszych kroków'],
     cta:{label:'Zamów audyt', url:'https://konsultacja.muszynski.online'}},
   aios:{name:'AI OS — automatyzacja Twojej firmy', price:'od 2 000 €', tag:'Najmocniejszy efekt',
     forWhom:'Tracisz 10+ godzin miesięcznie na powtarzalnej robocie.',
-    includes:['Automatyzujemy maile, oferty, faktury, obsługę — pod Waszą firmę','Bez kodu i bez konsultanta na pół roku','Wdrożenie + przeszkolenie zespołu, zostaje Wasze'],
-    out:'Odzyskujecie nawet 10+ godzin tygodniowo.', time:'2–4 tygodnie',
-    proof:['Stawiamy na narzędziach z certyfikatami ISO 27001 / SOC 2 (Google Workspace, OpenAI Business) — Wasze dane bezpieczne','Rozwiązanie jest Waszą własnością — utrzymacie je sami','Bez kodu — nie uzależniacie się od programisty'],
+    includes:['Automatyzujemy maile, oferty, faktury, obsługę — pod Twoją firmę','Nic nie instalujesz sam — my wdrażamy i szkolimy, Ty tylko korzystasz','Bez kodu i bez konsultanta na pół roku','Wdrożenie + przeszkolenie zespołu, zostaje Twoje'],
+    out:'Odzyskujesz nawet 10+ godzin tygodniowo.', time:'2–4 tygodnie',
+    proof:['Stawiamy na narzędziach z certyfikatami ISO 27001 / SOC 2 (Google Workspace, OpenAI Business) — Twoje dane bezpieczne','Rozwiązanie jest Twoją własnością — utrzymasz je samodzielnie','Bez kodu — nie uzależniasz się od programisty'],
     cta:{label:'Porozmawiajmy o wdrożeniu', url:'https://konsultacja.muszynski.online'}},
   banner:{name:'Banner + Pakiet LinkedIn', price:'89–290 €', tag:'Widoczność',
-    forWhom:'Chcecie, żeby klienci Was widzieli i pamiętali.',
-    includes:['Profesjonalny baner i spójny wizerunek na LinkedIn','Pakiet 10 grafik gotowych do publikacji','Pod Wasz przekaz i branżę'],
-    out:'Wyglądacie profesjonalnie tam, gdzie szukają Was klienci.', time:'kilka dni',
+    forWhom:'Chcesz, żeby klienci Cię widzieli i pamiętali.',
+    includes:['Profesjonalny baner i spójny wizerunek na LinkedIn','Pakiet 10 grafik gotowych do publikacji','Pod Twój przekaz i branżę'],
+    out:'Wyglądasz profesjonalnie tam, gdzie szukają Cię klienci.', time:'kilka dni',
     proof:['Gotowe pliki na własność','Stała cena — wiesz z góry, ile zapłacisz'],
     cta:{label:'Zobacz pakiet bannerów', url:'https://muszynski.online'}},
   build:{name:'Strona, która przynosi klientów', price:'od 2 500 €', tag:'Strona www',
-    forWhom:'Nie macie strony albo obecna nie sprzedaje.',
-    includes:['Nowoczesna strona pod Wasz cel (klienci, nie ozdoba)','Pod telefon, szybka, z formularzem kontaktu','Treści i wygląd pod Waszą branżę'],
+    forWhom:'Nie masz strony albo obecna nie sprzedaje.',
+    includes:['Nowoczesna strona pod Twój cel (klienci, nie ozdoba)','Pod telefon, szybka, z formularzem kontaktu','Treści i wygląd pod Twoją branżę'],
     out:'Strona, która zamienia odwiedzających w zapytania.', time:'2–4 tygodnie',
-    proof:['Strona jest Waszą własnością','Zgodna z wymogami (RODO, dla DACH też Impressum)'],
+    proof:['Strona jest Twoją własnością','Zgodna z wymogami (RODO, dla DACH też Impressum)'],
     cta:{label:'Porozmawiajmy o stronie', url:'https://konsultacja.muszynski.online'}}
 };
 
@@ -474,13 +499,15 @@ function goStep(n){
 /* ---- archetypes ---- */
 function renderArch(){
   document.getElementById('archGallery').innerHTML=ARCHETYPES.map(a=>`
-    <button type="button" class="arch-card" data-arch="${a.id}">
+    <button type="button" class="arch-card${state.arch===a.id?' selected':''}" data-arch="${a.id}">
       <div class="a-icon">${ICONS[a.id]||''}</div><div class="a-name">${a.name}</div><div class="a-tag">${a.tag}</div>
     </button>`).join('');
   document.querySelectorAll('.arch-card').forEach(c=>c.onclick=()=>applyArchetype(c.dataset.arch));
 }
 function applyArchetype(id){
   const a=ARCHETYPES.find(x=>x.id===id); if(!a) return;
+  state.arch=id;
+  document.querySelectorAll('.arch-card').forEach(c=>c.classList.toggle('selected',c.dataset.arch===id));
   const setR=(n,v)=>{const el=document.querySelector(`input[name="${n}"][value="${v}"]`); if(el) el.checked=true;};
   setR('size',a.profile.size); document.getElementById('industry').value=a.profile.industry;
   state.pains=[...a.pains];
@@ -550,7 +577,7 @@ function recommend(){
 function pkgCard(id, primary){
   const p=PKG[id];
   return `<div class="pkg ${primary?'primary':''}">
-    <span class="ptag">${primary?'Dla Was najlepiej: '+p.tag:p.tag}</span>
+    <span class="ptag">${primary?'Dla Ciebie najlepiej: '+p.tag:p.tag}</span>
     <div class="pname">${p.name}</div>
     <div class="pprice">${p.price}${p.time?` · wdrożenie: ${p.time}`:''}</div>
     <div class="pdeliv">Online · hybrydowo · indywidualnie (po kontakcie)</div>
@@ -558,7 +585,6 @@ function pkgCard(id, primary){
     <ul>${p.includes.map(i=>`<li>${i}</li>`).join('')}</ul>
     <div class="pout">↗ ${p.out}</div>
     <div class="proof"><div class="pl">Dowód i bezpieczeństwo</div><ul>${p.proof.map(i=>`<li>${i}</li>`).join('')}</ul></div>
-    ${primary?`<div class="pcta"><a class="btn btn-primary" href="${p.cta.url}" target="_blank" rel="noopener">${p.cta.label} →</a></div>`:''}
   </div>`;
 }
 function renderResults(){
@@ -571,11 +597,11 @@ function renderResults(){
     oferty:'Oferty i wyceny składane w minuty z gotowych klocków, zamiast od zera.',
     faktury:'Dane spinane między narzędziami — koniec z przepisywaniem ręcznie.',
     umawianie:'Klient sam rezerwuje termin, system wysyła przypomnienia.',
-    obsluga:'Asystent odpowiada na najczęstsze pytania 24/7, trudne przekazuje Wam.',
+    obsluga:'Asystent odpowiada na najczęstsze pytania 24/7, trudne przekazuje Tobie.',
     raporty:'Raporty składają się same — gotowe na poniedziałek rano.',
     szukanie:'Jedno miejsce, w którym pytasz i od razu masz dokument/odpowiedź.',
-    social:'Posty pisane pod Wasz głos — z pomysłu do gotowca w kilka minut.',
-    widocznosc:'Plan i treści, które sprawiają, że klienci zaczynają Was znać.',
+    social:'Posty pisane pod Twój głos — z pomysłu do gotowca w kilka minut.',
+    widocznosc:'Plan i treści, które sprawiają, że klienci zaczynają Cię znać.',
     strona:'Strona, która zamienia odwiedzających w zapytania.'
   };
   const autos=sel.filter(p=>AUTO[p.id]).map(p=>`<li>${AUTO[p.id]}</li>`).join('');
@@ -583,15 +609,15 @@ function renderResults(){
 
   const brand=document.body.dataset.brand;
   const head = t.h>0
-    ? `Na podstawie tego, co zaznaczyliście, możecie odzyskać <strong>~${t.h} godzin miesięcznie</strong>. To czas, który dziś znika na powtarzalnej robocie.`
-    : `Wskazaliście głównie widoczność/stronę — tu chodzi o klientów, nie o godziny. Poniżej, co da najwięcej.`;
+    ? `Na podstawie Twoich zaznaczeń możesz odzyskać <strong>~${t.h} godzin miesięcznie</strong>. To czas, który dziś znika na powtarzalnej robocie.`
+    : `Twoje zaznaczenia dotyczą głównie widoczności/strony — tu chodzi o klientów, nie o godziny. Poniżej, co da najwięcej.`;
 
   document.getElementById('results').innerHTML=`
-    <h2>Co Wam się faktycznie opłaca</h2>
+    <h2>Co Ci się faktycznie opłaca</h2>
     <p class="sub">Dopasowanie na podstawie ${state.pains.length} zaznaczonych obszarów. Wyliczenia orientacyjne — punkt wyjścia do rozmowy, nie wycena.</p>
 
     <div class="verdict">
-      <div class="lc-lab" style="font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:600">Możecie odzyskać</div>
+      <div class="lc-lab" style="font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-weight:600">Możesz odzyskać</div>
       <div class="vbig">${t.h} h / mc</div>
       <div class="vsub">≈ ${t.zl.toLocaleString('pl-PL')} zł miesięcznie · ~${yearZl.toLocaleString('pl-PL')} zł rocznie (przy ${t.rate} zł/h)</div>
     </div>
@@ -602,12 +628,12 @@ function renderResults(){
 
     ${autos?`<div class="sec"><h3><span class="bar"></span>Co konkretnie u Was zautomatyzujemy</h3><ul class="autos">${autos}</ul></div>`:''}
 
-    <div class="sec"><h3><span class="bar"></span>Inne opcje (gdybyście chcieli zacząć inaczej)</h3>
+    <div class="sec"><h3><span class="bar"></span>Inne opcje (jeśli chcesz zacząć inaczej)</h3>
       <div class="alts">${rec.alts.map(id=>{const p=PKG[id];return `<div class="alt"><div class="an">${p.name}</div><div class="ap">${p.price}</div><div class="ad">${p.forWhom}</div></div>`;}).join('')}</div>
     </div>
 
     ${t.h>0?`<div class="cost"><h3>Ile kosztuje zostawienie tego „na potem"</h3>
-      <p>Zostając jak jest, w rok tracicie około <b>${yearH} godzin</b> (~${yearZl.toLocaleString('pl-PL')} zł) na robocie, którą da się zdjąć z głowy. To nie jest kara — to po prostu czas, który Wam ucieka co miesiąc.</p></div>`:''}
+      <p>Zostając jak jest, w rok tracisz około <b>${yearH} godzin</b> (~${yearZl.toLocaleString('pl-PL')} zł) na robocie, którą da się zdjąć z głowy. To nie jest kara — to po prostu czas, który Ci ucieka co miesiąc.</p></div>`:''}
 
     <div class="cta-final">
       <h3>Chcesz pełną ofertę pod swoją firmę?</h3>
