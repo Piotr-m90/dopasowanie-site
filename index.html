@@ -191,7 +191,9 @@
   .disclaimer{font-size:12px;color:var(--muted);margin-top:24px;border-top:1px solid var(--line);padding-top:16px;line-height:1.6}
 
   /* LEAD FORM (w cta-final, kontekst ciemny) */
-  .lead-form{display:grid;gap:10px;max-width:420px;margin:0 auto;text-align:left}
+  .lead-form{display:grid;gap:10px;max-width:420px;margin:14px auto 0;text-align:left}
+  .lead-form[hidden]{display:none}
+  .lead-intro{font-size:13.5px;color:#cdc6ba;line-height:1.5;margin-bottom:2px}
   .lead-form input[type=text],.lead-form input[type=email],.lead-form input[type=tel]{
     width:100%;padding:14px 16px;border-radius:12px;border:1.5px solid rgba(255,255,255,.18);
     background:rgba(255,255,255,.06);color:#fff;font-family:inherit;font-size:16px}
@@ -607,7 +609,7 @@ function updateMcta(){
   } else if(step===3){
     bar.className='mcta full';
     bar.innerHTML=`<button type="button" class="btn btn-primary" id="mctaBtn">Poproś o rozbudowaną ofertę →</button>`;
-    document.getElementById('mctaBtn').onclick=()=>{ const f=document.getElementById('leadForm'); if(f){ f.scrollIntoView({behavior:'smooth',block:'center'}); const em=f.querySelector('[name=email]'); if(em) setTimeout(()=>{try{em.focus();}catch(_){}}, 380); } };
+    document.getElementById('mctaBtn').onclick=()=>{ const f=document.getElementById('leadForm'); const rv=document.getElementById('leadReveal'); if(f && f.hidden && rv){ rv.click(); } else if(f){ f.scrollIntoView({behavior:'smooth',block:'center'}); const em=f.querySelector('[name=email]'); if(em) setTimeout(()=>{try{em.focus();}catch(_){}}, 380); } };
   } else {
     bar.className='mcta full';
     bar.innerHTML=`<button type="button" class="btn btn-primary" id="mctaBtn">Dalej →</button>`;
@@ -707,13 +709,16 @@ function renderResults(){
     <div class="cta-final">
       <h3>Chcesz pełną ofertę pod swoją firmę?</h3>
       <p>To, co widzisz wyżej, to mini-oferta z orientacyjnym kosztem. Zostaw kontakt, a w ciągu <strong>48 godzin</strong> wyślę Ci <strong>rozbudowaną ofertę</strong>: jak AI może działać w Twojej firmie krok po kroku, z konkretnym kosztem i pierwszymi krokami. Od razu dostaniesz maila z potwierdzeniem i zaproszeniem na rozmowę — bez dzwonienia bez zapowiedzi.</p>
-      <form id="leadForm" class="lead-form" novalidate>
+      <button type="button" class="btn btn-primary" id="leadReveal">Poproś o rozbudowaną ofertę →</button>
+      <form id="leadForm" class="lead-form" hidden novalidate>
+        <p class="lead-intro">Zostaw kontakt — wyślę Ci rozbudowaną ofertę na maila (w ciągu 48h).</p>
         <input type="text" name="name" placeholder="Imię" autocomplete="name">
         <input type="email" name="email" placeholder="Twój e-mail" required autocomplete="email" inputmode="email">
         <input type="tel" name="phone" placeholder="Telefon (opcjonalnie)" autocomplete="tel" inputmode="tel">
         <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
         <label class="consent"><input type="checkbox" name="consent" required> Zgadzam się na kontakt w sprawie oferty. Dane wykorzystamy tylko w tym celu (RODO).</label>
-        <button type="submit" class="btn btn-primary" id="leadSubmit">Poproś o rozbudowaną ofertę →</button>
+        <label class="consent"><input type="checkbox" name="marketing"> Chcę też dostawać newsletter — praktyczne wskazówki o AI dla małych firm. Zgoda marketingowa, mogę ją wycofać w każdej chwili (RODO).</label>
+        <button type="submit" class="btn btn-primary" id="leadSubmit">Wyślij — chcę ofertę →</button>
         <div class="lead-msg" id="leadMsg" role="status" aria-live="polite"></div>
       </form>
       <div class="cta-or">albo</div>
@@ -739,6 +744,12 @@ function renderResults(){
   const lead = { pkg:pkgName, hours:String(t.h), zl:t.zl.toLocaleString('pl-PL'), year_zl:yearZl.toLocaleString('pl-PL'), message:diagMsg };
 
   const form=document.getElementById('leadForm');
+  const reveal=document.getElementById('leadReveal');
+  if(reveal && form) reveal.onclick=()=>{
+    form.hidden=false; reveal.style.display='none';
+    form.scrollIntoView({behavior:'smooth',block:'center'});
+    const em=form.querySelector('[name=email]'); if(em) setTimeout(()=>{try{em.focus();}catch(_){}}, 350);
+  };
   if(form) form.addEventListener('submit', e=>{
     e.preventDefault();
     const msg=document.getElementById('leadMsg');
@@ -749,7 +760,7 @@ function renderResults(){
     btn.disabled=true; btn.textContent='Wysyłam…'; msg.className='lead-msg'; msg.textContent='';
     const d=new URLSearchParams();
     d.set('name',(form.name.value||'').trim()); d.set('email',email); d.set('phone',(form.phone.value||'').trim());
-    d.set('website',form.website.value||''); d.set('consent', form.consent.checked?'1':'');
+    d.set('website',form.website.value||''); d.set('consent', form.consent.checked?'1':''); d.set('marketing', form.marketing.checked?'1':'');
     d.set('message',lead.message); d.set('pkg',lead.pkg); d.set('hours',lead.hours); d.set('zl',lead.zl); d.set('year_zl',lead.year_zl);
     fetch(RELAY_URL,{method:'POST',body:d})
       .then(r=>r.json().catch(()=>({ok:false})))
