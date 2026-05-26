@@ -104,7 +104,8 @@
   .arch-gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:12px}
   .arch-card{border:1.5px solid var(--line);border-radius:12px;padding:16px;cursor:pointer;background:#fff;transition:.15s;text-align:left;font-family:inherit}
   .arch-card:hover{border-color:var(--accent);transform:translateY(-2px);box-shadow:0 8px 22px rgba(13,13,13,.07)}
-  .arch-card .a-emoji{font-size:24px;line-height:1}
+  .arch-card .a-icon{color:var(--accent-2);height:28px}
+  .arch-card .a-icon svg{width:28px;height:28px;display:block}
   .arch-card .a-name{font-weight:700;font-size:15px;margin:8px 0 3px;color:var(--ink);letter-spacing:-.01em}
   .arch-card .a-tag{font-size:13px;color:var(--muted)}
   .or-div{display:flex;align-items:center;gap:14px;color:var(--muted);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;margin:26px 0 20px}
@@ -157,7 +158,7 @@
   .pkg .pout{font-size:14px;font-weight:700;color:var(--green);margin-top:13px}
   .proof{margin-top:15px;border-top:1px dashed var(--line);padding-top:15px}
   .proof .pl{font-family:var(--mono);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:8px}
-  .proof ul li::before{content:"🛡";color:var(--accent-2)}
+  .proof ul li::before{content:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="%23D4890A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4-3 7-7 9-4-2-7-5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg>');top:1px}
   .pkg .pcta{margin-top:20px}
 
   .alts{display:grid;grid-template-columns:1fr 1fr;gap:12px}
@@ -405,13 +406,24 @@ const PKG={
 
 /* Archetypy — od razu podstawiają typowe bóle */
 const ARCHETYPES=[
-  {id:'agencja',emoji:'📣',name:'Agencja / marketing',tag:'klienci, oferty, social',profile:{size:'micro',industry:'uslugi'},pains:['maile','oferty','social','obsluga']},
-  {id:'gabinet',emoji:'💆',name:'Gabinet / uroda / zdrowie',tag:'rezerwacje, przypomnienia',profile:{size:'micro',industry:'zdrowie'},pains:['umawianie','obsluga','social','widocznosc']},
-  {id:'sklep',emoji:'🛒',name:'Sklep / e-commerce',tag:'zamówienia, pytania',profile:{size:'micro',industry:'handel'},pains:['obsluga','maile','raporty','social']},
-  {id:'ksiegowa',emoji:'📊',name:'Biuro rachunkowe / kancelaria',tag:'dokumenty, faktury',profile:{size:'solo',industry:'finanse'},pains:['faktury','szukanie','maile','raporty']},
-  {id:'gastro',emoji:'🍽️',name:'Gastronomia / lokal',tag:'rezerwacje, opinie',profile:{size:'micro',industry:'gastro'},pains:['umawianie','obsluga','social','widocznosc']},
-  {id:'rzemioslo',emoji:'🔧',name:'Rzemiosło / usługi lokalne',tag:'wyceny, umawianie',profile:{size:'solo',industry:'produkcja'},pains:['oferty','umawianie','maile','strona']}
+  {id:'agencja',name:'Agencja / marketing',tag:'klienci, oferty, social',profile:{size:'micro',industry:'uslugi'},pains:['maile','oferty','social','obsluga']},
+  {id:'gabinet',name:'Gabinet / uroda / zdrowie',tag:'rezerwacje, przypomnienia',profile:{size:'micro',industry:'zdrowie'},pains:['umawianie','obsluga','social','widocznosc']},
+  {id:'sklep',name:'Sklep / e-commerce',tag:'zamówienia, pytania',profile:{size:'micro',industry:'handel'},pains:['obsluga','maile','raporty','social']},
+  {id:'ksiegowa',name:'Biuro rachunkowe / kancelaria',tag:'dokumenty, faktury',profile:{size:'solo',industry:'finanse'},pains:['faktury','szukanie','maile','raporty']},
+  {id:'gastro',name:'Gastronomia / lokal',tag:'rezerwacje, opinie',profile:{size:'micro',industry:'gastro'},pains:['umawianie','obsluga','social','widocznosc']},
+  {id:'rzemioslo',name:'Rzemiosło / usługi lokalne',tag:'wyceny, umawianie',profile:{size:'solo',industry:'produkcja'},pains:['oferty','umawianie','maile','strona']}
 ];
+
+/* Ikony archetypów — czyste line-icony (zamiast emotek) */
+const IC='viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"';
+const ICONS={
+  agencja:`<svg ${IC}><path d="M4 10v4h3l8 4V6l-8 4H4z"/><path d="M18 9a3.5 3.5 0 0 1 0 6"/></svg>`,
+  gabinet:`<svg ${IC}><path d="M12 19s-6.5-4.2-6.5-9A3.3 3.3 0 0 1 12 7a3.3 3.3 0 0 1 6.5 1c0 4.8-6.5 11-6.5 11z"/></svg>`,
+  sklep:`<svg ${IC}><path d="M6 8h12l-1 12H7L6 8z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg>`,
+  ksiegowa:`<svg ${IC}><path d="M4 20h16"/><path d="M7 20v-5"/><path d="M12 20V8"/><path d="M17 20v-9"/></svg>`,
+  gastro:`<svg ${IC}><circle cx="12" cy="12" r="6.5"/><circle cx="12" cy="12" r="2.4"/></svg>`,
+  rzemioslo:`<svg ${IC}><path d="M15.5 4.6a4 4 0 0 0-4.9 5L4 16.2 7.8 20l6.6-6.6a4 4 0 0 0 5-4.9l-2.5 2.5-2.4-.6-.6-2.4 2.5-2.5z"/></svg>`
+};
 
 const state={ profile:{rate:100}, pains:[] };
 
@@ -426,7 +438,7 @@ function goStep(n){
 function renderArch(){
   document.getElementById('archGallery').innerHTML=ARCHETYPES.map(a=>`
     <button type="button" class="arch-card" data-arch="${a.id}">
-      <div class="a-emoji">${a.emoji}</div><div class="a-name">${a.name}</div><div class="a-tag">${a.tag}</div>
+      <div class="a-icon">${ICONS[a.id]||''}</div><div class="a-name">${a.name}</div><div class="a-tag">${a.tag}</div>
     </button>`).join('');
   document.querySelectorAll('.arch-card').forEach(c=>c.onclick=()=>applyArchetype(c.dataset.arch));
 }
