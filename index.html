@@ -178,6 +178,11 @@
   ul.autos li{background:#fff;border:1px solid var(--line);border-radius:10px;padding:13px 16px;font-size:14px;display:flex;gap:11px;align-items:flex-start}
   ul.autos li::before{content:"→";color:var(--accent-2);font-weight:700;flex:none}
 
+  .social{display:grid;gap:12px}
+  .tcard{margin:0;background:#fff;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:12px;padding:18px 20px}
+  .tcard blockquote{margin:0;font-size:15px;line-height:1.55;color:var(--ink-soft)}
+  .tcard figcaption{margin-top:10px;font-size:13px;color:var(--muted);font-weight:600}
+  .tcard figcaption strong{color:var(--accent-2);font-family:var(--mono)}
   .cost{background:#FBEFD8;border:1px solid #EAD3A1;border-radius:14px;padding:20px 22px;margin-bottom:28px}
   .cost h3{color:#9A5B00;font-size:16px;font-weight:700;margin-bottom:6px}
   .cost p{font-size:14px;color:#6e4f18;line-height:1.55}
@@ -487,11 +492,11 @@ const PKG={
     out:'Konkretny plan + działające demo, które widzisz na żywo.', time:'~1 tydzień',
     proof:['Raport dostajesz na własność','Kwota audytu odliczana od wdrożenia','Bez zobowiązania do dalszych kroków'],
     cta:{label:'Zamów audyt', url:'https://konsultacja.muszynski.online'}},
-  aios:{name:'AI OS — automatyzacja Twojej firmy', price:'od 2 000 €', tag:'Najmocniejszy efekt',
+  aios:{name:'Automatyzacja Twojej firmy (AI OS)', price:'od 2 000 €', tag:'Pełna automatyzacja',
     forWhom:'Tracisz 10+ godzin miesięcznie na powtarzalnej robocie.',
     includes:['Automatyzujemy maile, oferty, faktury, obsługę — pod Twoją firmę','Nic nie instalujesz sam — my wdrażamy i szkolimy, Ty tylko korzystasz','Bez kodu i bez konsultanta na pół roku','Wdrożenie + przeszkolenie zespołu, zostaje Twoje'],
     out:'Odzyskujesz nawet 10+ godzin tygodniowo.', time:'2–4 tygodnie',
-    proof:['Stawiamy na narzędziach z certyfikatami ISO 27001 / SOC 2 (Google Workspace, OpenAI Business) — Twoje dane bezpieczne','Rozwiązanie jest Twoją własnością — utrzymasz je samodzielnie','Bez kodu — nie uzależniasz się od programisty'],
+    proof:['Twoje dane zostają u Ciebie — pracujemy na sprawdzonych, bezpiecznych narzędziach (Google Workspace, OpenAI Business)','Rozwiązanie jest Twoją własnością — utrzymasz je samodzielnie','Bez kodu — nie uzależniasz się od programisty'],
     cta:{label:'Porozmawiajmy o wdrożeniu', url:'https://konsultacja.muszynski.online'}},
   banner:{name:'Banner + Pakiet LinkedIn', price:'89–290 €', tag:'Widoczność',
     forWhom:'Chcesz, żeby klienci Cię widzieli i pamiętali.',
@@ -528,12 +533,27 @@ const ICONS={
   rzemioslo:`<svg ${IC}><path d="M15.5 4.6a4 4 0 0 0-4.9 5L4 16.2 7.8 20l6.6-6.6a4 4 0 0 0 5-4.9l-2.5 2.5-2.4-.6-.6-2.4 2.5-2.5z"/></svg>`
 };
 
+/* Dowód społeczny — WYPEŁNIĆ realnymi (NIE fabrykować). Pusty = sekcja się nie pokazuje.
+   Format: {quote:'...', author:'Imię, firma', result:'np. +12 h/mc'} */
+const SOCIAL=[];
+
 /* Autonomiczne łapanie leada — formularz on-page POST-uje do relay (Hostinger):
    auto-mail do leada (Gmail SMTP) + powiadomienie Piotra + zapis do centralnej Teable Leady.
    Relay niesie pełną diagnozę. Token/sekrety TYLKO na serwerze (.env), NIGDY tutaj. */
 const RELAY_URL='https://media.muszynski.online/dopasowanie/send.php';
 
 const state={ profile:{rate:100}, pains:[] };
+
+/* ---- pomiar: Clarity (warunkowy) + eventy lejka ----
+   Aktywacja: wklej Project ID z clarity.microsoft.com poniżej. Pusty = brak ładowania. */
+const CLARITY_ID='';
+(function(){ if(!CLARITY_ID) return;
+  (function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src='https://www.clarity.ms/tag/'+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,'clarity','script',CLARITY_ID);
+})();
+function track(name, data){
+  try{ if(window.clarity) window.clarity('event','dopas_'+name); }catch(_){}
+  try{ (window.dataLayer=window.dataLayer||[]).push(Object.assign({event:'dopas_'+name}, data||{})); }catch(_){}
+}
 
 /* ---- nav ---- */
 function goStep(n){
@@ -559,6 +579,7 @@ function applyArchetype(id){
   setR('size',a.profile.size); document.getElementById('industry').value=a.profile.industry;
   state.pains=[...a.pains];
   renderPains();
+  track('pains_start', {from:'archetyp', arch:id});
   goStep(2); updateCounter();
 }
 
@@ -634,11 +655,16 @@ function recommend(){
   const brand=sel.some(p=>p.cat==='brand');
   const web=sel.some(p=>p.cat==='web');
   const opsCount=sel.filter(p=>p.cat==='ops').length;
+  const bigFirm = (state.profile.size==='small' || state.profile.size==='mid'); // 10+ osób = wyższa ciepłota/budżet
 
   let primary, alts;
-  if(opsH>=12 || opsCount>=3){ primary='aios'; alts=['audyt','konsultacja']; }
+  if(web && !opsCount && !brand){ primary='build'; alts=['audyt','rozmowa']; }
+  else if(opsH>=12 || opsCount>=3){
+    // dużo do automatyzacji — duża firma: od razu AI OS; solo/mała: najpierw Audyt (zobacz efekt na swoich danych), AI OS jako cel
+    if(bigFirm){ primary='aios'; alts=['audyt','konsultacja']; }
+    else { primary='audyt'; alts=['aios','konsultacja']; }
+  }
   else if(opsH>=5){ primary='audyt'; alts=['aios','konsultacja']; }
-  else if(web && !opsCount){ primary='build'; alts=['audyt','rozmowa']; }
   else if(brand && opsCount<=1){ primary='audyt'; alts=['banner','konsultacja']; }
   else { primary='konsultacja'; alts=['audyt','rozmowa']; }
   // strona dorzucana jako alternatywa, jeśli zaznaczona a nie jest primary
@@ -664,6 +690,7 @@ function pkgCard(id, primary){
 function renderResults(){
   readProfile();
   const t=totals(); const rec=recommend();
+  track('result_view', {pkg:rec.primary, hours:t.h, pains:state.pains.length});
   const sel=state.pains.map(id=>PAINS.find(p=>p.id===id));
   // mapowanie ból → co zautomatyzujemy (nasze słowa)
   const AUTO={
@@ -686,6 +713,8 @@ function renderResults(){
     ? `Na podstawie Twoich zaznaczeń możesz odzyskać <strong>~${t.h} godzin miesięcznie</strong>. To czas, który dziś znika na powtarzalnej robocie.`
     : `Twoje zaznaczenia dotyczą głównie widoczności/strony — tu chodzi o klientów, nie o godziny. Poniżej, co da najwięcej.`;
 
+  const socialBlock = SOCIAL.length ? `<div class="sec"><h3><span class="bar"></span>Tak to wygląda u innych</h3><div class="social">${SOCIAL.map(s=>`<figure class="tcard"><blockquote>„${s.quote}”</blockquote><figcaption>${s.author}${s.result?` · <strong>${s.result}</strong>`:''}</figcaption></figure>`).join('')}</div></div>` : '';
+
   document.getElementById('results').innerHTML=`
     <h2>Co Ci się faktycznie opłaca</h2>
     <p class="sub">Dopasowanie na podstawie ${state.pains.length} zaznaczonych obszarów. Wyliczenia orientacyjne — punkt wyjścia do rozmowy, nie wycena.</p>
@@ -699,6 +728,8 @@ function renderResults(){
     <div class="sec"><p style="font-size:15px;color:var(--ink-soft);margin-bottom:18px">${head}</p>
       ${pkgCard(rec.primary, true)}
     </div>
+
+    ${socialBlock}
 
     ${autos?`<div class="sec"><h3><span class="bar"></span>Co konkretnie u Ciebie zautomatyzujemy</h3><ul class="autos">${autos}</ul></div>`:''}
 
@@ -748,6 +779,7 @@ function renderResults(){
 
   const form=document.getElementById('leadForm');
   function showLeadForm(){
+    track('offer_intent', {pkg: rec.primary});
     if(!form) return;
     form.hidden=false;
     const rb=document.getElementById('leadReveal'); if(rb) rb.style.display='none';
@@ -771,7 +803,7 @@ function renderResults(){
     fetch(RELAY_URL,{method:'POST',body:d})
       .then(r=>r.json().catch(()=>({ok:false})))
       .then(j=>{
-        if(j && j.ok){ form.classList.add('sent'); msg.className='lead-msg ok'; msg.textContent='✓ '+(j.msg||'Gotowe — sprawdź skrzynkę.'); }
+        if(j && j.ok){ form.classList.add('sent'); msg.className='lead-msg ok'; msg.textContent='✓ '+(j.msg||'Gotowe — sprawdź skrzynkę.'); track('lead_submit', {pkg:lead.pkg, marketing: form.marketing.checked?1:0}); }
         else { btn.disabled=false; btn.textContent='Poproś o rozbudowaną ofertę →'; msg.className='lead-msg err'; msg.textContent=(j&&j.msg)||'Coś poszło nie tak. Spróbuj ponownie.'; }
       })
       .catch(()=>{ btn.disabled=false; btn.textContent='Poproś o rozbudowaną ofertę →'; msg.className='lead-msg err'; msg.textContent='Brak połączenia. Spróbuj ponownie lub napisz: kontakt@muszynski.online'; });
@@ -780,7 +812,7 @@ function renderResults(){
 
 /* ---- validation + wiring ---- */
 function step1ok(){ return !!document.querySelector('input[name="size"]:checked') && !!document.getElementById('industry').value; }
-document.getElementById('to2').onclick=()=>{ if(!step1ok()){alert('Zaznacz proszę wielkość firmy i branżę.');return;} readProfile(); renderPains(); goStep(2); };
+document.getElementById('to2').onclick=()=>{ if(!step1ok()){alert('Zaznacz proszę wielkość firmy i branżę.');return;} readProfile(); renderPains(); track('pains_start', {from:'form'}); goStep(2); };
 document.getElementById('back1').onclick=()=>goStep(1);
 document.getElementById('to3').onclick=()=>{ renderResults(); goStep(3); };
 document.querySelectorAll('input[name="rate"]').forEach(r=>r.onchange=()=>{state.profile.rate=r.value; updateCounter();});
@@ -801,7 +833,7 @@ document.getElementById('ctaDemo').onclick=()=>{
     const hl=document.getElementById('heroLogo'); if(hl) hl.style.display='none';
     document.getElementById('footerText').innerHTML='Dopasowanie AI — narzędzie orientacyjne. Przygotowane w ramach <a href="https://metropolix.com" target="_blank" rel="noopener">Metropolix</a>.';
   }})();
-renderArch(); renderPains(); updateMcta();
+renderArch(); renderPains(); updateMcta(); track('view');
 </script>
 </body>
 </html>
