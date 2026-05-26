@@ -180,6 +180,10 @@
   .cta-final{background:linear-gradient(155deg,var(--ink),var(--ink-soft));color:#fff;border-radius:var(--radius);padding:36px 30px;text-align:center;margin-top:30px}
   .cta-final h3{font-size:24px;font-weight:700;margin-bottom:10px;letter-spacing:-.015em}
   .cta-final p{color:#d6cfc2;max-width:560px;margin:0 auto 22px;font-size:15px;line-height:1.55}
+  .cta-final .btn-ghost{color:#fff;border-color:rgba(255,255,255,.4)}
+  .cta-final .btn-ghost:hover{border-color:var(--accent);color:var(--accent)}
+  .cta-or{color:#a89f90;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin:20px 0 12px}
+  .cta-2{color:#d6cfc2;font-size:14px;max-width:520px;margin:0 auto 14px;line-height:1.5}
   .disclaimer{font-size:12px;color:var(--muted);margin-top:24px;border-top:1px solid var(--line);padding-top:16px;line-height:1.6}
 
   /* KTO ZA TYM STOI */
@@ -454,6 +458,9 @@ const ICONS={
   rzemioslo:`<svg ${IC}><path d="M15.5 4.6a4 4 0 0 0-4.9 5L4 16.2 7.8 20l6.6-6.6a4 4 0 0 0 5-4.9l-2.5 2.5-2.4-.6-.6-2.4 2.5-2.5z"/></svg>`
 };
 
+/* Autonomiczne łapanie leada — publiczny formularz Teable (ląduje w centralnej bazie Leady) */
+const LEAD_FORM_URL='https://app.teable.ai/share/shrXaL5HzKeF6CxYGGx/view';
+
 const state={ profile:{rate:100}, pains:[] };
 
 /* ---- nav ---- */
@@ -605,6 +612,9 @@ function renderResults(){
       <h3>Zobaczcie to na swoim przykładzie</h3>
       <p>Najprościej zacząć od krótkiej rozmowy albo audytu — pokażemy konkret pod Waszą firmę, bez żargonu i bez zobowiązań.</p>
       <a href="${PKG[rec.primary].cta.url}" class="btn btn-primary" target="_blank" rel="noopener">${PKG[rec.primary].cta.label} →</a>
+      <div class="cta-or">albo</div>
+      <p class="cta-2">Nie chcesz teraz rozmawiać? Zostaw kontakt — odezwiemy się z konkretem pod Twój wynik. Pracujemy online, hybrydowo lub indywidualnie.</p>
+      <a href="${LEAD_FORM_URL}" class="btn btn-ghost" target="_blank" rel="noopener">Zostaw kontakt →</a>
     </div>
 
     <div class="nav-row"><button class="btn btn-ghost" id="back2">← Zmień odpowiedzi</button><button class="btn btn-ghost" id="restart">Zacznij od nowa</button></div>
